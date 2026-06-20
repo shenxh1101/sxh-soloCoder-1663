@@ -182,6 +182,27 @@ export const qualityApi = {
     return request<QualityTrendPoint[]>(`/quality/stats/trends${query}`);
   },
 
+  getByOrderSummary: (month?: string) => {
+    const query = month ? `?month=${month}` : '';
+    return request<Array<{
+      orderId: string;
+      orderNo: string;
+      partName: string;
+      partNo: string;
+      supplierName: string;
+      quantity: number;
+      totalInspections: number;
+      latestInspectionRound: number;
+      latestPassRate: number;
+      latestQualifiedQuantity: number;
+      latestUnqualifiedQuantity: number;
+      isPassed: boolean;
+      latestInspectedAt: string;
+      latestInspector: string;
+      orderStatus: string;
+    }>>(`/quality/stats/by-order${query}`);
+  },
+
   getSummary: () => request<DashboardStats>('/quality/stats/summary'),
 };
 

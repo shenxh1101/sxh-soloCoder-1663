@@ -21,6 +21,7 @@ export interface DrawingFile {
   uploader: string;
   version: number;
   isCurrent: boolean;
+  groupId: string;
   parentId?: string;
 }
 

@@ -33,9 +33,26 @@ router.get('/', async (req: Request, res: Response): Promise<void> => {
     }
     
     if (status === 'pending') {
-      filtered = filtered.filter(r => r.qualifiedQuantity === 0);
+      const inspectedOrderIds = new Set(records.map(r => r.orderId));
+      const pendingOrders = await readDataFile<Order[]>('orders.json');
+      filtered = pendingOrders
+        .filter(o => o.status === 'inspecting' && !inspectedOrderIds.has(o.id))
+        .map(o => ({
+          id: 'pending_' + o.id,
+          orderId: o.id,
+          orderNo: o.orderNo,
+          inspector: '',
+          qualifiedQuantity: 0,
+          unqualifiedQuantity: 0,
+          passRate: 0,
+          defects: [],
+          remark: '',
+          inspectedAt: '',
+          inspectionRound: 0,
+          _isPending: true,
+        }));
     } else if (status === 'completed') {
-      filtered = filtered.filter(r => r.qualifiedQuantity > 0);
+      filtered = filtered.filter(r => r.qualifiedQuantity >= 0 && r.inspectedAt);
     }
     
     filtered.sort((a, b) => new Date(b.inspectedAt).getTime() - new Date(a.inspectedAt).getTime());
@@ -65,6 +82,64 @@ router.get('/defect-types', async (req: Request, res: Response): Promise<void> =
     res.json({ success: true, data: defectTypes });
   } catch (error) {
     res.status(500).json({ success: false, error: 'Failed to fetch defect types' });
+  }
+});
+
+router.get('/stats/by-order', async (req: Request, res: Response): Promise<void> => {
+  try {
+    const { month } = req.query;
+    const records = await readDataFile<QualityInspection[]>('quality.json');
+    const orders = await readDataFile<Order[]>('orders.json');
+    
+    const orderLatestRecords = new Map<string, QualityInspection>();
+    records.forEach(r => {
+      if (r.inspectedAt) {
+        const existing = orderLatestRecords.get(r.orderId);
+        if (!existing || new Date(r.inspectedAt) > new Date(existing.inspectedAt)) {
+          orderLatestRecords.set(r.orderId, r);
+        }
+      }
+    });
+    
+    let resultOrders = orders;
+    if (month) {
+      const monthStr = month as string;
+      resultOrders = orders.filter(o => 
+        orderLatestRecords.has(o.id) && 
+        orderLatestRecords.get(o.id)!.inspectedAt.startsWith(monthStr)
+      );
+    }
+    
+    const result = resultOrders
+      .filter(o => orderLatestRecords.has(o.id))
+      .map(order => {
+        const latest = orderLatestRecords.get(order.id)!;
+        const allRecords = records.filter(r => r.orderId === order.id);
+        const isPassed = latest.unqualifiedQuantity === 0;
+        
+        return {
+          orderId: order.id,
+          orderNo: order.orderNo,
+          partName: order.partName,
+          partNo: order.partNo,
+          supplierName: order.supplierName,
+          quantity: order.quantity,
+          totalInspections: allRecords.length,
+          latestInspectionRound: latest.inspectionRound,
+          latestPassRate: latest.passRate,
+          latestQualifiedQuantity: latest.qualifiedQuantity,
+          latestUnqualifiedQuantity: latest.unqualifiedQuantity,
+          isPassed,
+          latestInspectedAt: latest.inspectedAt,
+          latestInspector: latest.inspector,
+          orderStatus: order.status,
+        };
+      })
+      .sort((a, b) => new Date(b.latestInspectedAt).getTime() - new Date(a.latestInspectedAt).getTime());
+    
+    res.json({ success: true, data: result });
+  } catch (error) {
+    res.status(500).json({ success: false, error: 'Failed to fetch quality stats by order' });
   }
 });
 

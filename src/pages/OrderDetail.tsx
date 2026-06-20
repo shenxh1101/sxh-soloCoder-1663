@@ -38,12 +38,12 @@ export default function OrderDetail() {
   const [replaceDrawingId, setReplaceDrawingId] = useState<string | null>(null);
   const [expandedDrawingNames, setExpandedDrawingNames] = useState<Set<string>>(new Set());
 
-  const toggleDrawingExpand = (name: string) => {
+  const toggleDrawingExpand = (groupId: string) => {
     const newSet = new Set(expandedDrawingNames);
-    if (newSet.has(name)) {
-      newSet.delete(name);
+    if (newSet.has(groupId)) {
+      newSet.delete(groupId);
     } else {
-      newSet.add(name);
+      newSet.add(groupId);
     }
     setExpandedDrawingNames(newSet);
   };
@@ -52,12 +52,13 @@ export default function OrderDetail() {
     if (!order?.drawings) return [];
     const map = new Map<string, DrawingFile[]>();
     order.drawings.forEach(d => {
-      const list = map.get(d.name) || [];
+      const list = map.get(d.groupId) || [];
       list.push(d);
-      map.set(d.name, list);
+      map.set(d.groupId, list);
     });
-    return Array.from(map.entries()).map(([name, versions]) => ({
-      name,
+    return Array.from(map.entries()).map(([groupId, versions]) => ({
+      name: versions.find(v => v.isCurrent)?.name || versions[0].name,
+      groupId,
       versions: versions.sort((a, b) => (b.version || 1) - (a.version || 1)),
       current: versions.find(v => v.isCurrent) || versions[0],
     }));
@@ -550,10 +551,10 @@ export default function OrderDetail() {
             ) : (
               <div className="space-y-3">
                 {getDrawingsGroupedByName().map((group) => {
-                  const isExpanded = expandedDrawingNames.has(group.name);
+                  const isExpanded = expandedDrawingNames.has(group.groupId);
                   const current = group.current;
                   return (
-                    <div key={group.name} className="rounded-lg border border-gray-100 overflow-hidden">
+                    <div key={group.groupId} className="rounded-lg border border-gray-100 overflow-hidden">
                       <div className="flex items-center justify-between p-3 hover:bg-gray-50 transition-colors">
                         <div className="flex items-center gap-3 flex-1 min-w-0">
                           <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-blue-50 flex-shrink-0">
@@ -576,7 +577,7 @@ export default function OrderDetail() {
                         <div className="flex items-center gap-1">
                           {group.versions.length > 1 && (
                             <button
-                              onClick={() => toggleDrawingExpand(group.name)}
+                              onClick={() => toggleDrawingExpand(group.groupId)}
                               className="rounded-md p-1.5 text-gray-400 hover:bg-gray-100 hover:text-blue-600"
                               title="历史版本"
                             >

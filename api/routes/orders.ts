@@ -190,12 +190,14 @@ router.post('/:id/drawings', async (req: Request, res: Response): Promise<void> 
           
           let version = 1;
           let parentId: string | undefined;
+          let groupId: string = fileId;
           
           if (replaceDrawingId) {
             const oldDrawing = order.drawings.find(d => d.id === replaceDrawingId);
             if (oldDrawing) {
               version = oldDrawing.version + 1;
               parentId = oldDrawing.id;
+              groupId = oldDrawing.groupId;
               oldDrawing.isCurrent = false;
             }
           }
@@ -210,6 +212,7 @@ router.post('/:id/drawings', async (req: Request, res: Response): Promise<void> 
             uploader: req.body.operator || '系统',
             version,
             isCurrent: true,
+            groupId,
             parentId,
           });
         }
@@ -257,7 +260,7 @@ router.post('/:id/drawings/:drawingId/rollback', async (req: Request, res: Respo
     }
     
     order.drawings.forEach(d => {
-      if (d.name === targetDrawing.name) {
+      if (d.groupId === targetDrawing.groupId) {
         d.isCurrent = (d.id === drawingId);
       }
     });
@@ -326,6 +329,7 @@ router.post('/', async (req: Request, res: Response): Promise<void> => {
             uploader: req.body.operator || '系统',
             version: 1,
             isCurrent: true,
+            groupId: fileId,
           });
         }
       }

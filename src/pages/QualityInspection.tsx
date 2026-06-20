@@ -30,6 +30,27 @@ export default function QualityInspectionPage() {
   const [showHistoryModal, setShowHistoryModal] = useState(false);
   const [historyOrderNo, setHistoryOrderNo] = useState('');
   const [historyRecords, setHistoryRecords] = useState<QualityInspection[]>([]);
+  const [viewMode, setViewMode] = useState<'summary' | 'details'>('summary');
+
+  type OrderSummary = {
+    orderId: string;
+    orderNo: string;
+    partName: string;
+    partNo: string;
+    supplierName: string;
+    quantity: number;
+    totalInspections: number;
+    latestInspectionRound: number;
+    latestPassRate: number;
+    latestQualifiedQuantity: number;
+    latestUnqualifiedQuantity: number;
+    isPassed: boolean;
+    latestInspectedAt: string;
+    latestInspector: string;
+    orderStatus: string;
+  };
+
+  const [orderSummaries, setOrderSummaries] = useState<OrderSummary[]>([]);
   const [formData, setFormData] = useState({
     qualifiedQuantity: '',
     unqualifiedQuantity: '',
@@ -40,10 +61,28 @@ export default function QualityInspectionPage() {
   const [newDefect, setNewDefect] = useState({ type: '', description: '', quantity: 1 });
 
   useEffect(() => {
-    loadRecords();
+    if (viewMode === 'details') {
+      loadRecords();
+    } else {
+      loadOrderSummaries();
+    }
+    loadRecordsForStats();
     loadDefectTypes();
     loadInspectingOrders();
-  }, [page, status, searchKeyword]);
+  }, [page, status, searchKeyword, viewMode]);
+
+  const loadRecordsForStats = async () => {
+    try {
+      const data = await qualityApi.getList({
+        status: 'completed',
+        pageSize: 100,
+      });
+      setRecords(data.list);
+      setTotal(data.total);
+    } catch (error) {
+      console.error('Failed to load records for stats:', error);
+    }
+  };
 
   const loadRecords = async () => {
     try {
@@ -57,6 +96,33 @@ export default function QualityInspectionPage() {
       setTotal(data.total);
     } catch (error) {
       console.error('Failed to load records:', error);
+    }
+  };
+
+  const loadOrderSummaries = async () => {
+    try {
+      const data = await qualityApi.getByOrderSummary();
+      let filtered = data;
+      
+      if (searchKeyword) {
+        const kw = searchKeyword.toLowerCase();
+        filtered = filtered.filter(s => 
+          s.orderNo.toLowerCase().includes(kw) ||
+          s.partName.toLowerCase().includes(kw) ||
+          s.partNo.toLowerCase().includes(kw)
+        );
+      }
+      
+      if (status === 'pending') {
+        filtered = filtered.filter(s => !s.isPassed && s.orderStatus === 'inspecting');
+      } else if (status === 'completed') {
+        filtered = filtered.filter(s => s.isPassed);
+      }
+      
+      setOrderSummaries(filtered);
+      setTotal(filtered.length);
+    } catch (error) {
+      console.error('Failed to load order summaries:', error);
     }
   };
 
@@ -199,16 +265,16 @@ export default function QualityInspectionPage() {
         </div>
         <div className="rounded-xl bg-gradient-to-br from-emerald-500 to-emerald-600 p-5 text-white">
           <p className="text-sm opacity-90">本月已检验</p>
-          <p className="mt-2 text-3xl font-bold">{records.filter(r => r.qualifiedQuantity > 0).length}</p>
+          <p className="mt-2 text-3xl font-bold">{records.filter(r => r.inspectedAt).length}</p>
           <p className="mt-1 text-xs opacity-75">质检完成的订单</p>
         </div>
         <div className="rounded-xl bg-gradient-to-br from-purple-500 to-purple-600 p-5 text-white">
           <p className="text-sm opacity-90">平均合格率</p>
           <p className="mt-2 text-3xl font-bold">
-            {records.filter(r => r.qualifiedQuantity > 0).length > 0
+            {records.filter(r => r.inspectedAt).length > 0
               ? (
-                  records.filter(r => r.qualifiedQuantity > 0).reduce((sum, r) => sum + r.passRate, 0) /
-                  records.filter(r => r.qualifiedQuantity > 0).length
+                  records.filter(r => r.inspectedAt).reduce((sum, r) => sum + r.passRate, 0) /
+                  records.filter(r => r.inspectedAt).length
                 ).toFixed(1)
               : 0}
             %
@@ -265,7 +331,129 @@ export default function QualityInspectionPage() {
         </div>
       </div>
 
-      {status === 'all' || status === 'pending' ? (
+      <div className="flex items-center gap-3">
+        <div className="flex items-center gap-1 rounded-lg bg-gray-100 p-1">
+          <button
+            onClick={() => {
+              setViewMode('summary');
+              setPage(1);
+            }}
+            className={`rounded-md px-3 py-1.5 text-sm font-medium transition-colors ${
+              viewMode === 'summary' ? 'bg-white shadow-sm text-blue-600' : 'text-gray-600 hover:text-gray-800'
+            }`}
+          >
+            按订单汇总
+          </button>
+          <button
+            onClick={() => {
+              setViewMode('details');
+              setPage(1);
+            }}
+            className={`rounded-md px-3 py-1.5 text-sm font-medium transition-colors ${
+              viewMode === 'details' ? 'bg-white shadow-sm text-blue-600' : 'text-gray-600 hover:text-gray-800'
+            }`}
+          >
+            按记录查看
+          </button>
+        </div>
+      </div>
+
+      {viewMode === 'summary' ? (
+        <div className="overflow-hidden rounded-xl bg-white shadow-sm">
+          <div className="border-b border-gray-100 px-6 py-4">
+            <h3 className="text-base font-semibold text-gray-800">质检汇总</h3>
+          </div>
+          <div className="overflow-x-auto">
+            <table className="w-full">
+              <thead className="bg-gray-50">
+                <tr>
+                  <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">订单编号</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">零件信息</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">供应商</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">质检次数</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">最终结果</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">合格率</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">最终检验时间</th>
+                  <th className="px-6 py-3 text-right text-xs font-medium uppercase tracking-wider text-gray-500">操作</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-gray-100">
+                {orderSummaries.length === 0 ? (
+                  <tr>
+                    <td colSpan={8} className="px-6 py-12 text-center text-gray-500">暂无质检记录</td>
+                  </tr>
+                ) : (
+                  orderSummaries.map((summary) => (
+                    <tr key={summary.orderId} className="transition-colors hover:bg-gray-50">
+                      <td className="px-6 py-4">
+                        <button
+                          onClick={() => viewHistory(summary.orderId, summary.orderNo)}
+                          className="font-medium text-blue-600 hover:text-blue-700 hover:underline"
+                        >
+                          {summary.orderNo}
+                        </button>
+                      </td>
+                      <td className="px-6 py-4">
+                        <p className="text-sm font-medium text-gray-800">{summary.partName}</p>
+                        <p className="text-xs text-gray-500">{summary.partNo} · {summary.quantity}件</p>
+                      </td>
+                      <td className="px-6 py-4 text-sm text-gray-600">{summary.supplierName}</td>
+                      <td className="px-6 py-4">
+                        <span className={`inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium ${
+                          summary.totalInspections > 1 ? 'bg-orange-100 text-orange-700' : 'bg-gray-100 text-gray-700'
+                        }`}>
+                          {summary.totalInspections} 次
+                        </span>
+                      </td>
+                      <td className="px-6 py-4">
+                        {summary.isPassed ? (
+                          <span className="inline-flex items-center gap-1 rounded-full bg-green-100 px-2 py-0.5 text-xs font-medium text-green-700">
+                            <CheckCircle2 className="h-3.5 w-3.5" />
+                            合格
+                          </span>
+                        ) : (
+                          <span className="inline-flex items-center gap-1 rounded-full bg-red-100 px-2 py-0.5 text-xs font-medium text-red-700">
+                            <XCircle className="h-3.5 w-3.5" />
+                            不合格
+                          </span>
+                        )}
+                      </td>
+                      <td className="px-6 py-4">
+                        <span className={`text-sm font-medium ${summary.latestPassRate >= 95 ? 'text-green-600' : summary.latestPassRate >= 80 ? 'text-amber-600' : 'text-red-600'}`}>
+                          {summary.latestPassRate}%
+                        </span>
+                      </td>
+                      <td className="px-6 py-4 text-sm text-gray-600">{formatDate(summary.latestInspectedAt)}</td>
+                      <td className="px-6 py-4">
+                        <div className="flex justify-end gap-3">
+                          <button
+                            onClick={() => viewHistory(summary.orderId, summary.orderNo)}
+                            className="flex items-center gap-1 text-sm text-blue-600 hover:text-blue-700"
+                          >
+                            <Eye className="h-4 w-4" />
+                            追溯详情
+                          </button>
+                          {!summary.isPassed && summary.orderStatus === 'inspecting' && (
+                            <button
+                              onClick={() => handleReinspect(summary.orderId, summary.orderNo)}
+                              className="flex items-center gap-1 text-sm text-orange-600 hover:text-orange-700"
+                            >
+                              <RefreshCw className="h-4 w-4" />
+                              退回重检
+                            </button>
+                          )}
+                        </div>
+                      </td>
+                    </tr>
+                  ))
+                )}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      ) : (
+        <div className="space-y-6">
+          {status === 'all' || status === 'pending' ? (
         <div className="rounded-xl bg-white shadow-sm">
           <div className="border-b border-gray-100 px-6 py-4">
             <h3 className="text-base font-semibold text-gray-800">待质检订单</h3>
@@ -338,7 +526,7 @@ export default function QualityInspectionPage() {
               </thead>
               <tbody className="divide-y divide-gray-100">
                 {records
-                  .filter((r) => r.qualifiedQuantity > 0)
+                  .filter((r) => r.inspectedAt)
                   .map((record) => {
                     const isPassed = record.unqualifiedQuantity === 0;
                     const order = inspectingOrders.find(o => o.id === record.orderId);
@@ -419,6 +607,8 @@ export default function QualityInspectionPage() {
             </table>
           </div>
         </div>
+      )}
+      </div>
       )}
 
       {showModal && selectedOrder && (
