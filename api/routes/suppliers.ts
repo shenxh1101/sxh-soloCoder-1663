@@ -38,23 +38,37 @@ router.get('/', async (req: Request, res: Response): Promise<void> => {
 router.get('/performance', async (req: Request, res: Response): Promise<void> => {
   try {
     const { month } = req.query;
+    const targetMonth = (month as string) || '2026-06';
     const suppliers = await readDataFile<Supplier[]>('suppliers.json');
     const orders = await readDataFile<Order[]>('orders.json');
     const qualityRecords = await readDataFile<QualityInspection[]>('quality.json');
+    
+    const isInMonth = (dateStr: string) => {
+      if (!dateStr) return false;
+      const date = new Date(dateStr);
+      const year = date.getFullYear();
+      const monthNum = date.getMonth() + 1;
+      const [targetYear, targetMonthNum] = targetMonth.split('-').map(Number);
+      return year === targetYear && monthNum === targetMonthNum;
+    };
     
     const performances: SupplierPerformance[] = suppliers
       .filter(s => s.status === 'active')
       .map(supplier => {
         const supplierOrders = orders.filter(o => o.supplierId === supplier.id);
-        const completedOrders = supplierOrders.filter(o => o.status === 'completed');
-        const totalQuantity = completedOrders.reduce((sum, o) => sum + o.quantity, 0);
+        const monthCompletedOrders = supplierOrders.filter(o => 
+          o.status === 'completed' && o.actualDeliveryDate && isInMonth(o.actualDeliveryDate)
+        );
+        const totalQuantity = monthCompletedOrders.reduce((sum, o) => sum + o.quantity, 0);
         
-        const inspections = qualityRecords.filter(
-          q => supplierOrders.some(o => o.id === q.orderId) && q.qualifiedQuantity > 0
+        const monthInspections = qualityRecords.filter(
+          q => supplierOrders.some(o => o.id === q.orderId) 
+            && q.qualifiedQuantity > 0 
+            && isInMonth(q.inspectedAt)
         );
         
-        const totalQualified = inspections.reduce((sum, q) => sum + q.qualifiedQuantity, 0);
-        const totalInspected = inspections.reduce(
+        const totalQualified = monthInspections.reduce((sum, q) => sum + q.qualifiedQuantity, 0);
+        const totalInspected = monthInspections.reduce(
           (sum, q) => sum + q.qualifiedQuantity + q.unqualifiedQuantity,
           0
         );
@@ -62,18 +76,18 @@ router.get('/performance', async (req: Request, res: Response): Promise<void> =>
           ? parseFloat(((totalQualified / totalInspected) * 100).toFixed(2)) 
           : 0;
         
-        const onTimeCount = completedOrders.filter(o => {
+        const onTimeCount = monthCompletedOrders.filter(o => {
           if (!o.actualDeliveryDate) return false;
           return new Date(o.actualDeliveryDate) <= new Date(o.deliveryDate);
         }).length;
         
-        const onTimeDeliveryRate = completedOrders.length > 0
-          ? parseFloat(((onTimeCount / completedOrders.length) * 100).toFixed(2))
+        const onTimeDeliveryRate = monthCompletedOrders.length > 0
+          ? parseFloat(((onTimeCount / monthCompletedOrders.length) * 100).toFixed(2))
           : 0;
         
         const defectDistribution: { type: string; count: number }[] = [];
         const defectMap = new Map<string, number>();
-        inspections.forEach(q => {
+        monthInspections.forEach(q => {
           q.defects.forEach(d => {
             defectMap.set(d.type, (defectMap.get(d.type) || 0) + d.quantity);
           });
@@ -88,8 +102,8 @@ router.get('/performance', async (req: Request, res: Response): Promise<void> =>
         return {
           supplierId: supplier.id,
           supplierName: supplier.name,
-          month: (month as string) || '2026-06',
-          totalOrders: supplierOrders.length,
+          month: targetMonth,
+          totalOrders: monthCompletedOrders.length,
           totalQuantity,
           passRate,
           onTimeDeliveryRate,
@@ -106,6 +120,7 @@ router.get('/performance', async (req: Request, res: Response): Promise<void> =>
     
     res.json({ success: true, data: performances });
   } catch (error) {
+    console.error('Performance error:', error);
     res.status(500).json({ success: false, error: 'Failed to fetch performance data' });
   }
 });

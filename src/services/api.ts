@@ -157,7 +157,8 @@ export const exportApi = {
     window.open('/api/export/orders', '_blank');
   },
 
-  exportSupplierRanking: () => {
-    window.open('/api/export/suppliers/ranking', '_blank');
+  exportSupplierRanking: (month?: string) => {
+    const query = month ? `?month=${month}` : '';
+    window.open(`/api/export/suppliers/ranking${query}`, '_blank');
   },
 };

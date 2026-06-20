@@ -18,7 +18,7 @@ export default function OrderCreate() {
     supplierName: '',
     remark: '',
   });
-  const [files, setFiles] = useState<Array<{ id: string; name: string; size: number; type: string }>>([]);
+  const [files, setFiles] = useState<Array<{ id: string; name: string; size: number; type: string; data?: string }>>([]);
   const [submitting, setSubmitting] = useState(false);
 
   useEffect(() => {
@@ -62,8 +62,23 @@ export default function OrderCreate() {
         name: file.name,
         size: file.size,
         type: file.type,
+        data: '' as string,
       }));
-      setFiles((prev) => [...prev, ...newFiles]);
+
+      Promise.all(
+        Array.from(fileList).map((file, index) => {
+          return new Promise<string>((resolve, reject) => {
+            const reader = new FileReader();
+            reader.onload = () => resolve(reader.result as string);
+            reader.onerror = reject;
+            reader.readAsDataURL(file);
+          }).then((base64) => {
+            newFiles[index].data = base64;
+          });
+        })
+      ).then(() => {
+        setFiles((prev) => [...prev, ...newFiles]);
+      });
     }
   };
 
@@ -85,12 +100,10 @@ export default function OrderCreate() {
         unitPrice,
         totalPrice: quantity * unitPrice,
         drawings: files.map((f) => ({
-          id: f.id,
           name: f.name,
           type: f.type,
           size: f.size,
-          url: '/drawings/' + f.name,
-          uploadedAt: new Date().toISOString(),
+          data: f.data,
         })),
       });
 

@@ -53,6 +53,16 @@ export default function OrderDetail() {
     }
   };
 
+  const handleStatusChange = async (newStatus: string) => {
+    try {
+      const updated = await orderApi.updateStatus(id!, newStatus);
+      setOrder(updated);
+    } catch (error) {
+      console.error('Failed to update status:', error);
+      alert('状态更新失败');
+    }
+  };
+
   const formatDate = (dateStr: string) => {
     return new Date(dateStr).toLocaleDateString('zh-CN', {
       year: 'numeric',
@@ -184,9 +194,21 @@ export default function OrderDetail() {
         </div>
         <div className="flex gap-2">
           {order.status === 'pending' && (
-            <button className="flex items-center gap-2 rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-blue-700">
+            <button
+              onClick={() => handleStatusChange('processing')}
+              className="flex items-center gap-2 rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-blue-700"
+            >
               <Play className="h-4 w-4" />
               下发订单
+            </button>
+          )}
+          {order.status === 'processing' && (
+            <button
+              onClick={() => handleStatusChange('inspecting')}
+              className="flex items-center gap-2 rounded-lg bg-emerald-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-emerald-700"
+            >
+              <Package className="h-4 w-4" />
+              加工完成
             </button>
           )}
           {order.status === 'inspecting' && (
@@ -418,10 +440,11 @@ export default function OrderDetail() {
                       </div>
                     </div>
                     <div className="flex gap-1">
-                      <button className="rounded-md p-1.5 text-gray-400 hover:bg-gray-100 hover:text-gray-600">
-                        <Eye className="h-4 w-4" />
-                      </button>
-                      <button className="rounded-md p-1.5 text-gray-400 hover:bg-gray-100 hover:text-gray-600">
+                      <button
+                        onClick={() => window.open(drawing.url, '_blank')}
+                        className="rounded-md p-1.5 text-gray-400 hover:bg-gray-100 hover:text-gray-600"
+                        title="下载"
+                      >
                         <Download className="h-4 w-4" />
                       </button>
                     </div>

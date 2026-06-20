@@ -1,6 +1,17 @@
 import { Router, type Request, type Response } from 'express';
 import { readDataFile, writeDataFile, generateId } from '../utils/db.js';
-import type { Order } from '../../shared/types.js';
+import type { Order, DrawingFile } from '../../shared/types.js';
+import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+const uploadsDir = path.join(__dirname, '..', 'uploads');
+
+if (!fs.existsSync(uploadsDir)) {
+  fs.mkdirSync(uploadsDir, { recursive: true });
+}
 
 const router = Router();
 
@@ -50,6 +61,42 @@ router.get('/', async (req: Request, res: Response): Promise<void> => {
   }
 });
 
+router.get('/drawings/:fileId', async (req: Request, res: Response): Promise<void> => {
+  try {
+    const { fileId } = req.params;
+    
+    const files = fs.readdirSync(uploadsDir);
+    const matchedFile = files.find(f => f.startsWith(fileId + '.'));
+    
+    if (!matchedFile) {
+      res.status(404).json({ success: false, error: 'File not found' });
+      return;
+    }
+    
+    const filePath = path.join(uploadsDir, matchedFile);
+    const orders = await readDataFile<Order[]>('orders.json');
+    
+    let fileName = matchedFile;
+    for (const order of orders) {
+      const drawing = order.drawings.find(d => d.id === fileId);
+      if (drawing) {
+        fileName = drawing.name;
+        break;
+      }
+    }
+    
+    const encodedFileName = encodeURIComponent(fileName);
+    res.setHeader('Content-Type', 'application/octet-stream');
+    res.setHeader('Content-Disposition', `attachment; filename*=UTF-8''${encodedFileName}`);
+    
+    const fileStream = fs.createReadStream(filePath);
+    fileStream.pipe(res);
+  } catch (error) {
+    console.error('Download drawing error:', error);
+    res.status(500).json({ success: false, error: 'Failed to download file' });
+  }
+});
+
 router.get('/:id', async (req: Request, res: Response): Promise<void> => {
   try {
     const orders = await readDataFile<Order[]>('orders.json');
@@ -70,6 +117,33 @@ router.post('/', async (req: Request, res: Response): Promise<void> => {
   try {
     const orders = await readDataFile<Order[]>('orders.json');
     
+    const drawings: DrawingFile[] = [];
+    
+    if (req.body.drawings && Array.isArray(req.body.drawings)) {
+      for (const drawing of req.body.drawings) {
+        if (drawing.data && drawing.name) {
+          const fileId = generateId('dr');
+          const ext = path.extname(drawing.name) || '.pdf';
+          const fileName = `${fileId}${ext}`;
+          const filePath = path.join(uploadsDir, fileName);
+          
+          const base64Data = drawing.data.replace(/^data:[^,]+,/, '');
+          fs.writeFileSync(filePath, base64Data, 'base64');
+          
+          const stats = fs.statSync(filePath);
+          
+          drawings.push({
+            id: fileId,
+            name: drawing.name,
+            type: drawing.type || 'application/octet-stream',
+            size: stats.size,
+            url: `/api/orders/drawings/${fileId}`,
+            uploadedAt: new Date().toISOString(),
+          });
+        }
+      }
+    }
+    
     const newOrder: Order = {
       id: generateId('o'),
       orderNo: req.body.orderNo,
@@ -81,7 +155,7 @@ router.post('/', async (req: Request, res: Response): Promise<void> => {
       deliveryDate: req.body.deliveryDate,
       supplierId: req.body.supplierId,
       supplierName: req.body.supplierName,
-      drawings: req.body.drawings || [],
+      drawings,
       status: 'pending',
       remark: req.body.remark || '',
       createdAt: new Date().toISOString(),
@@ -93,6 +167,7 @@ router.post('/', async (req: Request, res: Response): Promise<void> => {
     
     res.json({ success: true, data: newOrder });
   } catch (error) {
+    console.error('Create order error:', error);
     res.status(500).json({ success: false, error: 'Failed to create order' });
   }
 });

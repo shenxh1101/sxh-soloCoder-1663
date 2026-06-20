@@ -18,6 +18,7 @@ export default function QualityInspectionPage() {
   const [page, setPage] = useState(1);
   const [status, setStatus] = useState<string>('all');
   const [keyword, setKeyword] = useState('');
+  const [searchKeyword, setSearchKeyword] = useState('');
   const [defectTypes, setDefectTypes] = useState<DefectType[]>([]);
   const [showModal, setShowModal] = useState(false);
   const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
@@ -35,11 +36,12 @@ export default function QualityInspectionPage() {
     loadRecords();
     loadDefectTypes();
     loadInspectingOrders();
-  }, [page, status]);
+  }, [page, status, searchKeyword]);
 
   const loadRecords = async () => {
     try {
       const data = await qualityApi.getList({
+        orderNo: searchKeyword || undefined,
         status,
         page,
         pageSize: 10,
@@ -49,6 +51,17 @@ export default function QualityInspectionPage() {
     } catch (error) {
       console.error('Failed to load records:', error);
     }
+  };
+
+  const handleSearch = () => {
+    setPage(1);
+    setSearchKeyword(keyword.trim());
+  };
+
+  const handleClear = () => {
+    setKeyword('');
+    setPage(1);
+    setSearchKeyword('');
   };
 
   const loadDefectTypes = async () => {
@@ -99,6 +112,11 @@ export default function QualityInspectionPage() {
     try {
       const qualifiedQuantity = parseInt(formData.qualifiedQuantity) || 0;
       const unqualifiedQuantity = parseInt(formData.unqualifiedQuantity) || 0;
+
+      if (qualifiedQuantity + unqualifiedQuantity !== selectedOrder.quantity) {
+        alert(`合格数量(${qualifiedQuantity}) + 不良数量(${unqualifiedQuantity}) 必须等于订单加工数量(${selectedOrder.quantity})，请检查后再提交`);
+        return;
+      }
 
       await qualityApi.create({
         orderId: selectedOrder.id,
@@ -169,15 +187,30 @@ export default function QualityInspectionPage() {
         <div className="flex flex-col gap-4 md:flex-row md:items-end">
           <div className="flex-1">
             <label className="mb-1.5 block text-sm font-medium text-gray-700">搜索</label>
-            <div className="relative">
-              <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
-              <input
-                type="text"
-                value={keyword}
-                onChange={(e) => setKeyword(e.target.value)}
-                placeholder="订单编号..."
-                className="w-full rounded-lg border border-gray-200 bg-gray-50 py-2 pl-10 pr-4 text-sm outline-none transition-all focus:border-blue-400 focus:bg-white focus:ring-2 focus:ring-blue-100"
-              />
+            <div className="flex gap-2">
+              <div className="relative flex-1">
+                <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
+                <input
+                  type="text"
+                  value={keyword}
+                  onChange={(e) => setKeyword(e.target.value)}
+                  onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
+                  placeholder="订单编号..."
+                  className="w-full rounded-lg border border-gray-200 bg-gray-50 py-2 pl-10 pr-4 text-sm outline-none transition-all focus:border-blue-400 focus:bg-white focus:ring-2 focus:ring-blue-100"
+                />
+              </div>
+              <button
+                onClick={handleSearch}
+                className="rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-blue-700"
+              >
+                查询
+              </button>
+              <button
+                onClick={handleClear}
+                className="rounded-lg border border-gray-200 bg-white px-4 py-2 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-50"
+              >
+                清空
+              </button>
             </div>
           </div>
           <div className="w-full md:w-40">

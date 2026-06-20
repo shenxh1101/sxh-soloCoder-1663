@@ -171,8 +171,23 @@ router.post('/', async (req: Request, res: Response): Promise<void> => {
     const records = await readDataFile<QualityInspection[]>('quality.json');
     const orders = await readDataFile<Order[]>('orders.json');
     
-    const { qualifiedQuantity, unqualifiedQuantity, totalQuantity } = req.body;
+    const order = orders.find(o => o.id === req.body.orderId);
+    if (!order) {
+      res.status(404).json({ success: false, error: '订单不存在' });
+      return;
+    }
+    
+    const { qualifiedQuantity, unqualifiedQuantity } = req.body;
     const total = qualifiedQuantity + unqualifiedQuantity;
+    
+    if (total !== order.quantity) {
+      res.status(400).json({ 
+        success: false, 
+        error: `合格数量(${qualifiedQuantity}) + 不良数量(${unqualifiedQuantity}) 必须等于订单加工数量(${order.quantity})` 
+      });
+      return;
+    }
+    
     const passRate = total > 0 
       ? parseFloat(((qualifiedQuantity / total) * 100).toFixed(2)) 
       : 0;
