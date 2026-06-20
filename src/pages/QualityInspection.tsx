@@ -8,6 +8,9 @@ import {
   X,
   Clock,
   RefreshCw,
+  Eye,
+  ChevronRight,
+  AlertTriangle,
 } from 'lucide-react';
 import { qualityApi, orderApi } from '../services/api';
 import type { QualityInspection, Order, DefectType } from '@/types';
@@ -24,6 +27,9 @@ export default function QualityInspectionPage() {
   const [showModal, setShowModal] = useState(false);
   const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
   const [inspectingOrders, setInspectingOrders] = useState<Order[]>([]);
+  const [showHistoryModal, setShowHistoryModal] = useState(false);
+  const [historyOrderNo, setHistoryOrderNo] = useState('');
+  const [historyRecords, setHistoryRecords] = useState<QualityInspection[]>([]);
   const [formData, setFormData] = useState({
     qualifiedQuantity: '',
     unqualifiedQuantity: '',
@@ -148,6 +154,20 @@ export default function QualityInspectionPage() {
     } catch (error) {
       console.error('Failed to reinspect:', error);
       alert('退回重检失败，请重试');
+    }
+  };
+
+  const viewHistory = async (orderId: string, orderNo: string) => {
+    try {
+      const data = await qualityApi.getByOrderId(orderId);
+      setHistoryRecords(data.sort((a, b) => 
+        new Date(a.inspectedAt).getTime() - new Date(b.inspectedAt).getTime()
+      ));
+      setHistoryOrderNo(orderNo);
+      setShowHistoryModal(true);
+    } catch (error) {
+      console.error('Failed to load history:', error);
+      alert('加载质检历史失败');
     }
   };
 
@@ -327,7 +347,12 @@ export default function QualityInspectionPage() {
                     return (
                       <tr key={record.id} className="transition-colors hover:bg-gray-50">
                         <td className="px-6 py-4">
-                          <span className="font-medium text-blue-600">{record.orderNo}</span>
+                          <button
+                            onClick={() => viewHistory(record.orderId, record.orderNo)}
+                            className="font-medium text-blue-600 hover:text-blue-700 hover:underline"
+                          >
+                            {record.orderNo}
+                          </button>
                         </td>
                         <td className="px-6 py-4">
                           <span className="inline-flex items-center rounded-full bg-purple-100 px-2.5 py-0.5 text-xs font-medium text-purple-700">
@@ -368,15 +393,24 @@ export default function QualityInspectionPage() {
                         </td>
                         <td className="px-6 py-4 text-sm text-gray-500">{formatDate(record.inspectedAt)}</td>
                         <td className="px-6 py-4">
-                          {canReinspect && (
+                          <div className="flex gap-3">
                             <button
-                              onClick={() => handleReinspect(record.orderId, record.orderNo)}
-                              className="flex items-center gap-1 text-sm text-orange-600 hover:text-orange-700"
+                              onClick={() => viewHistory(record.orderId, record.orderNo)}
+                              className="flex items-center gap-1 text-sm text-blue-600 hover:text-blue-700"
                             >
-                              <RefreshCw className="h-4 w-4" />
-                              退回重检
+                              <Eye className="h-4 w-4" />
+                              详情
                             </button>
-                          )}
+                            {canReinspect && (
+                              <button
+                                onClick={() => handleReinspect(record.orderId, record.orderNo)}
+                                className="flex items-center gap-1 text-sm text-orange-600 hover:text-orange-700"
+                              >
+                                <RefreshCw className="h-4 w-4" />
+                                退回重检
+                              </button>
+                            )}
+                          </div>
                         </td>
                       </tr>
                     );
@@ -543,6 +577,137 @@ export default function QualityInspectionPage() {
                 </button>
               </div>
             </form>
+          </div>
+        </div>
+      )}
+
+      {showHistoryModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
+          <div className="w-full max-w-3xl max-h-[85vh] flex flex-col rounded-xl bg-white shadow-xl">
+            <div className="flex items-center justify-between border-b border-gray-100 px-6 py-4">
+              <div>
+                <h3 className="text-lg font-semibold text-gray-800">质检历史详情</h3>
+                <p className="text-sm text-gray-500 mt-0.5">订单号：{historyOrderNo}</p>
+              </div>
+              <button
+                onClick={() => setShowHistoryModal(false)}
+                className="rounded-md p-1 text-gray-400 hover:bg-gray-100 hover:text-gray-600"
+              >
+                <X className="h-5 w-5" />
+              </button>
+            </div>
+            <div className="flex-1 overflow-y-auto p-6">
+              {historyRecords.length === 0 ? (
+                <div className="text-center py-12 text-gray-500">暂无质检记录</div>
+              ) : (
+                <div className="space-y-6">
+                  <div className="rounded-lg bg-blue-50 p-4">
+                    <p className="text-sm text-blue-700">
+                      共 <span className="font-semibold">{historyRecords.length}</span> 次质检记录，
+                      最终结果：
+                      {(() => {
+                        const latest = historyRecords[historyRecords.length - 1];
+                        return latest.unqualifiedQuantity === 0 ? (
+                          <span className="ml-1 font-semibold text-green-600">质检通过</span>
+                        ) : (
+                          <span className="ml-1 font-semibold text-orange-600">未通过（可退回重检）</span>
+                        );
+                      })()}
+                    </p>
+                  </div>
+
+                  <div className="relative">
+                    {historyRecords.map((record, idx) => {
+                      const isPassed = record.unqualifiedQuantity === 0;
+                      const isLatest = idx === historyRecords.length - 1;
+                      const isFirst = idx === 0;
+                      return (
+                        <div key={record.id} className="relative flex gap-4 pb-8 last:pb-0">
+                          {idx < historyRecords.length - 1 && (
+                            <div className="absolute left-[19px] top-10 h-[calc(100%-2.5rem)] w-0.5 bg-gray-200"></div>
+                          )}
+                          <div className={`relative z-10 flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full ${
+                            isPassed ? 'bg-green-500' : 'bg-orange-500'
+                          } text-white`}>
+                            {isPassed ? (
+                              <CheckCircle2 className="h-5 w-5" />
+                            ) : (
+                              <AlertTriangle className="h-5 w-5" />
+                            )}
+                          </div>
+                          <div className="flex-1">
+                            <div className="flex items-center gap-2 flex-wrap">
+                              <h4 className="text-sm font-medium text-gray-800">
+                                第 {record.inspectionRound || 1} 次质检
+                              </h4>
+                              {isLatest && (
+                                <span className="inline-flex items-center rounded-full bg-blue-100 px-2 py-0.5 text-xs font-medium text-blue-700">
+                                  当前结果
+                                </span>
+                              )}
+                              <span className={`inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium ${
+                                isPassed ? 'bg-green-100 text-green-700' : 'bg-orange-100 text-orange-700'
+                              }`}>
+                                {isPassed ? '合格' : '不合格'}
+                              </span>
+                            </div>
+                            <p className="mt-1 text-xs text-gray-500">
+                              {formatDate(record.inspectedAt)} · 检验员：{record.inspector}
+                            </p>
+                            <div className="mt-3 grid grid-cols-3 gap-3 text-center">
+                              <div className={`rounded-lg p-3 ${isPassed ? 'bg-green-50' : 'bg-orange-50'}`}>
+                                <p className={`text-lg font-semibold ${isPassed ? 'text-green-600' : 'text-orange-600'}`}>
+                                  {record.qualifiedQuantity}
+                                </p>
+                                <p className="text-xs text-gray-500">合格</p>
+                              </div>
+                              <div className="rounded-lg bg-red-50 p-3">
+                                <p className="text-lg font-semibold text-red-600">{record.unqualifiedQuantity}</p>
+                                <p className="text-xs text-gray-500">不良</p>
+                              </div>
+                              <div className="rounded-lg bg-gray-50 p-3">
+                                <p className="text-lg font-semibold text-gray-600">{record.passRate}%</p>
+                                <p className="text-xs text-gray-500">合格率</p>
+                              </div>
+                            </div>
+                            {record.defects.length > 0 && (
+                              <div className="mt-3">
+                                <p className="mb-2 text-xs font-medium text-gray-600">不良详情</p>
+                                <div className="space-y-1.5">
+                                  {record.defects.map((defect, i) => (
+                                    <div key={i} className="flex items-center justify-between rounded-md bg-red-50 px-3 py-1.5">
+                                      <div>
+                                        <span className="text-xs font-medium text-red-700">{defect.type}</span>
+                                        {defect.description && (
+                                          <span className="ml-2 text-xs text-red-600">{defect.description}</span>
+                                        )}
+                                      </div>
+                                      <span className="text-xs font-medium text-red-700">{defect.quantity} 件</span>
+                                    </div>
+                                  ))}
+                                </div>
+                              </div>
+                            )}
+                            {record.remark && (
+                              <div className="mt-3 rounded-md bg-gray-50 px-3 py-2">
+                                <p className="text-xs text-gray-500">备注</p>
+                                <p className="text-sm text-gray-700">{record.remark}</p>
+                              </div>
+                            )}
+                            {!isLatest && !isPassed && (
+                              <div className="mt-3 inline-flex items-center gap-1 text-xs text-amber-600 bg-amber-50 px-2 py-1 rounded">
+                                <RefreshCw className="h-3 w-3" />
+                                本次不合格，已退回重检
+                              </div>
+                            )}
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
+            </div>
           </div>
         </div>
       )}

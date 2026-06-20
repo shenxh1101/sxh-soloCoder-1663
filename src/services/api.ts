@@ -54,7 +54,7 @@ export const orderApi = {
 
   getDetail: (id: string) => request<Order>(`/orders/${id}`),
 
-  create: (data: Partial<Order> & { drawings?: Array<{ name: string; type: string; size: number; data: string }> }) =>
+  create: (data: Omit<Partial<Order>, 'drawings'> & { drawings?: Array<{ name: string; type: string; size: number; data: string }> }) =>
     request<Order>('/orders', {
       method: 'POST',
       body: JSON.stringify(data),
@@ -77,10 +77,15 @@ export const orderApi = {
       method: 'DELETE',
     }),
 
-  uploadDrawings: (orderId: string, drawings: Array<{ name: string; type: string; size: number; data: string }>) =>
+  uploadDrawings: (orderId: string, drawings: Array<{ name: string; type: string; size: number; data: string }>, replaceDrawingId?: string) =>
     request<Order>(`/orders/${orderId}/drawings`, {
       method: 'POST',
-      body: JSON.stringify({ drawings }),
+      body: JSON.stringify({ drawings, replaceDrawingId }),
+    }),
+
+  rollbackDrawing: (orderId: string, drawingId: string) =>
+    request<Order>(`/orders/${orderId}/drawings/${drawingId}/rollback`, {
+      method: 'POST',
     }),
 
   remove: (id: string) =>

@@ -173,6 +173,7 @@ router.post('/:id/drawings', async (req: Request, res: Response): Promise<void> 
     
     const order = orders[index];
     const newDrawings: DrawingFile[] = [];
+    const replaceDrawingId = req.body.replaceDrawingId;
     
     if (req.body.drawings && Array.isArray(req.body.drawings)) {
       for (const drawing of req.body.drawings) {
@@ -187,6 +188,18 @@ router.post('/:id/drawings', async (req: Request, res: Response): Promise<void> 
           
           const stats = fs.statSync(filePath);
           
+          let version = 1;
+          let parentId: string | undefined;
+          
+          if (replaceDrawingId) {
+            const oldDrawing = order.drawings.find(d => d.id === replaceDrawingId);
+            if (oldDrawing) {
+              version = oldDrawing.version + 1;
+              parentId = oldDrawing.id;
+              oldDrawing.isCurrent = false;
+            }
+          }
+          
           newDrawings.push({
             id: fileId,
             name: drawing.name,
@@ -194,6 +207,10 @@ router.post('/:id/drawings', async (req: Request, res: Response): Promise<void> 
             size: stats.size,
             url: `/api/orders/drawings/${fileId}`,
             uploadedAt: new Date().toISOString(),
+            uploader: req.body.operator || '系统',
+            version,
+            isCurrent: true,
+            parentId,
           });
         }
       }
@@ -203,8 +220,12 @@ router.post('/:id/drawings', async (req: Request, res: Response): Promise<void> 
     order.updatedAt = new Date().toISOString();
     
     if (newDrawings.length > 0) {
-      const drawingNames = newDrawings.map(d => d.name).join('、');
-      addOperationLog(order, 'drawing_upload', '图纸上传', `上传图纸：${drawingNames}`, req.body.operator || '系统');
+      const drawingNames = newDrawings.map(d => `${d.name} (v${d.version})`).join('、');
+      if (replaceDrawingId) {
+        addOperationLog(order, 'drawing_replace', '图纸替换', `替换图纸：${drawingNames}`, req.body.operator || '系统');
+      } else {
+        addOperationLog(order, 'drawing_upload', '图纸上传', `上传图纸：${drawingNames}`, req.body.operator || '系统');
+      }
     }
     
     await writeDataFile('orders.json', orders);
@@ -213,6 +234,50 @@ router.post('/:id/drawings', async (req: Request, res: Response): Promise<void> 
   } catch (error) {
     console.error('Upload drawing error:', error);
     res.status(500).json({ success: false, error: 'Failed to upload drawing' });
+  }
+});
+
+router.post('/:id/drawings/:drawingId/rollback', async (req: Request, res: Response): Promise<void> => {
+  try {
+    const { id, drawingId } = req.params;
+    const orders = await readDataFile<Order[]>('orders.json');
+    const index = orders.findIndex(o => o.id === id);
+    
+    if (index === -1) {
+      res.status(404).json({ success: false, error: 'Order not found' });
+      return;
+    }
+    
+    const order = orders[index];
+    const targetDrawing = order.drawings.find(d => d.id === drawingId);
+    
+    if (!targetDrawing) {
+      res.status(404).json({ success: false, error: 'Drawing not found' });
+      return;
+    }
+    
+    order.drawings.forEach(d => {
+      if (d.name === targetDrawing.name) {
+        d.isCurrent = (d.id === drawingId);
+      }
+    });
+    
+    order.updatedAt = new Date().toISOString();
+    
+    addOperationLog(
+      order,
+      'drawing_rollback',
+      '图纸回退',
+      `回退图纸到 v${targetDrawing.version}：${targetDrawing.name}`,
+      req.body.operator || '系统'
+    );
+    
+    await writeDataFile('orders.json', orders);
+    
+    res.json({ success: true, data: order });
+  } catch (error) {
+    console.error('Rollback drawing error:', error);
+    res.status(500).json({ success: false, error: 'Failed to rollback drawing' });
   }
 });
 
@@ -258,6 +323,9 @@ router.post('/', async (req: Request, res: Response): Promise<void> => {
             size: stats.size,
             url: `/api/orders/drawings/${fileId}`,
             uploadedAt: new Date().toISOString(),
+            uploader: req.body.operator || '系统',
+            version: 1,
+            isCurrent: true,
           });
         }
       }

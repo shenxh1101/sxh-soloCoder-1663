@@ -17,8 +17,11 @@
         "name": "法兰盘图纸_A版.pdf",
         "type": "application/pdf",
         "size": 2456789,
-        "url": "/drawings/flange.pdf",
-        "uploadedAt": "2026-06-10T09:30:00.000Z"
+        "url": "/api/orders/drawings/dr001",
+        "uploadedAt": "2026-06-10T09:30:00.000Z",
+        "uploader": "系统",
+        "version": 1,
+        "isCurrent": true
       }
     ],
     "status": "completed",
@@ -85,8 +88,11 @@
         "name": "轴承座装配图.dwg",
         "type": "image/vnd.dwg",
         "size": 1876543,
-        "url": "/drawings/bearing.dwg",
-        "uploadedAt": "2026-06-12T11:15:00Z"
+        "url": "/api/orders/drawings/dr002",
+        "uploadedAt": "2026-06-12T11:15:00Z",
+        "uploader": "系统",
+        "version": 1,
+        "isCurrent": true
       }
     ],
     "status": "processing",
@@ -138,8 +144,11 @@
         "name": "齿轮轴零件图.pdf",
         "type": "application/pdf",
         "size": 3123456,
-        "url": "/drawings/gear-shaft.pdf",
-        "uploadedAt": "2026-04-10T14:20:00Z"
+        "url": "/api/orders/drawings/dr003",
+        "uploadedAt": "2026-04-10T14:20:00Z",
+        "uploader": "系统",
+        "version": 1,
+        "isCurrent": true
       }
     ],
     "status": "completed",
@@ -206,8 +215,11 @@
         "name": "支撑板下料图.pdf",
         "type": "application/pdf",
         "size": 987654,
-        "url": "/drawings/support-plate.pdf",
-        "uploadedAt": "2026-06-15T08:50:00Z"
+        "url": "/api/orders/drawings/dr004",
+        "uploadedAt": "2026-06-15T08:50:00Z",
+        "uploader": "系统",
+        "version": 1,
+        "isCurrent": true
       }
     ],
     "status": "pending",
@@ -251,8 +263,11 @@
         "name": "连接法兰图.dwg",
         "type": "image/vnd.dwg",
         "size": 1456789,
-        "url": "/drawings/connect-flange.dwg",
-        "uploadedAt": "2026-05-05T10:00:00.000Z"
+        "url": "/api/orders/drawings/dr005",
+        "uploadedAt": "2026-05-05T10:00:00.000Z",
+        "uploader": "系统",
+        "version": 1,
+        "isCurrent": true
       }
     ],
     "status": "completed",
@@ -319,8 +334,11 @@
         "name": "导向轴零件图.pdf",
         "type": "application/pdf",
         "size": 2234567,
-        "url": "/drawings/guide-shaft.pdf",
-        "uploadedAt": "2026-06-18T13:45:00Z"
+        "url": "/api/orders/drawings/dr006",
+        "uploadedAt": "2026-06-18T13:45:00Z",
+        "uploader": "系统",
+        "version": 1,
+        "isCurrent": true
       }
     ],
     "status": "processing",
@@ -372,8 +390,11 @@
         "name": "压盖图纸.pdf",
         "type": "application/pdf",
         "size": 765432,
-        "url": "/drawings/gland.pdf",
-        "uploadedAt": "2026-06-10T16:20:00.000Z"
+        "url": "/api/orders/drawings/dr007",
+        "uploadedAt": "2026-06-10T16:20:00.000Z",
+        "uploader": "系统",
+        "version": 1,
+        "isCurrent": true
       }
     ],
     "status": "completed",
@@ -440,8 +461,11 @@
         "name": "联轴器装配图.dwg",
         "type": "image/vnd.dwg",
         "size": 2876543,
-        "url": "/drawings/coupling.dwg",
-        "uploadedAt": "2026-06-20T11:30:00Z"
+        "url": "/api/orders/drawings/dr008",
+        "uploadedAt": "2026-06-20T11:30:00Z",
+        "uploader": "系统",
+        "version": 1,
+        "isCurrent": true
       }
     ],
     "status": "pending",
@@ -485,8 +509,11 @@
         "name": "支架焊接图.pdf",
         "type": "application/pdf",
         "size": 1654321,
-        "url": "/drawings/bracket.pdf",
-        "uploadedAt": "2026-05-12T09:15:00.000Z"
+        "url": "/api/orders/drawings/dr009",
+        "uploadedAt": "2026-05-12T09:15:00.000Z",
+        "uploader": "系统",
+        "version": 1,
+        "isCurrent": true
       }
     ],
     "status": "completed",
@@ -553,8 +580,11 @@
         "name": "螺母座零件图.dwg",
         "type": "image/vnd.dwg",
         "size": 1234567,
-        "url": "/drawings/nut-seat.dwg",
-        "uploadedAt": "2026-06-22T14:10:00Z"
+        "url": "/api/orders/drawings/dr010",
+        "uploadedAt": "2026-06-22T14:10:00Z",
+        "uploader": "系统",
+        "version": 1,
+        "isCurrent": true
       }
     ],
     "status": "processing",
@@ -606,8 +636,11 @@
         "name": "端盖图纸.pdf",
         "type": "application/pdf",
         "size": 876543,
-        "url": "/drawings/end-cap.pdf",
-        "uploadedAt": "2026-04-08T10:30:00Z"
+        "url": "/api/orders/drawings/dr011",
+        "uploadedAt": "2026-04-08T10:30:00Z",
+        "uploader": "系统",
+        "version": 1,
+        "isCurrent": true
       }
     ],
     "status": "completed",
@@ -674,8 +707,11 @@
         "name": "滚珠丝杆装配图.pdf",
         "type": "application/pdf",
         "size": 3456789,
-        "url": "/drawings/ball-screw.pdf",
-        "uploadedAt": "2026-06-28T11:45:00Z"
+        "url": "/api/orders/drawings/dr012",
+        "uploadedAt": "2026-06-28T11:45:00Z",
+        "uploader": "系统",
+        "version": 1,
+        "isCurrent": true
       }
     ],
     "status": "pending",
@@ -719,8 +755,11 @@
         "name": "凸轮轮廓图.dwg",
         "type": "image/vnd.dwg",
         "size": 1567890,
-        "url": "/drawings/cam.dwg",
-        "uploadedAt": "2026-06-15T15:30:00.000Z"
+        "url": "/api/orders/drawings/dr013",
+        "uploadedAt": "2026-06-15T15:30:00.000Z",
+        "uploader": "系统",
+        "version": 1,
+        "isCurrent": true
       }
     ],
     "status": "completed",
@@ -787,8 +826,11 @@
         "name": "机座铸件图.pdf",
         "type": "application/pdf",
         "size": 2987654,
-        "url": "/drawings/frame.pdf",
-        "uploadedAt": "2026-06-25T09:20:00Z"
+        "url": "/api/orders/drawings/dr014",
+        "uploadedAt": "2026-06-25T09:20:00Z",
+        "uploader": "系统",
+        "version": 1,
+        "isCurrent": true
       }
     ],
     "status": "processing",
@@ -840,8 +882,11 @@
         "name": "衬套零件图.pdf",
         "type": "application/pdf",
         "size": 543210,
-        "url": "/drawings/bushing.pdf",
-        "uploadedAt": "2026-05-20T16:45:00.000Z"
+        "url": "/api/orders/drawings/dr015",
+        "uploadedAt": "2026-05-20T16:45:00.000Z",
+        "uploader": "系统",
+        "version": 1,
+        "isCurrent": true
       }
     ],
     "status": "completed",
@@ -908,8 +953,11 @@
         "name": "防护罩钣金图.dwg",
         "type": "image/vnd.dwg",
         "size": 1123456,
-        "url": "/drawings/cover.dwg",
-        "uploadedAt": "2026-06-30T10:30:00Z"
+        "url": "/api/orders/drawings/dr016",
+        "uploadedAt": "2026-06-30T10:30:00Z",
+        "uploader": "系统",
+        "version": 1,
+        "isCurrent": true
       }
     ],
     "status": "pending",
@@ -953,8 +1001,11 @@
         "name": "圆柱齿轮图.pdf",
         "type": "application/pdf",
         "size": 1789012,
-        "url": "/drawings/gear.pdf",
-        "uploadedAt": "2026-06-18T08:30:00.000Z"
+        "url": "/api/orders/drawings/dr017",
+        "uploadedAt": "2026-06-18T08:30:00.000Z",
+        "uploader": "系统",
+        "version": 1,
+        "isCurrent": true
       }
     ],
     "status": "completed",
@@ -1022,8 +1073,11 @@
         "name": "平键规格图.pdf",
         "type": "application/pdf",
         "size": 234567,
-        "url": "/drawings/key.pdf",
-        "uploadedAt": "2026-05-22T13:20:00.000Z"
+        "url": "/api/orders/drawings/dr018",
+        "uploadedAt": "2026-05-22T13:20:00.000Z",
+        "uploader": "系统",
+        "version": 1,
+        "isCurrent": true
       }
     ],
     "status": "completed",
@@ -1090,8 +1144,11 @@
         "name": "阀体铸件图.dwg",
         "type": "image/vnd.dwg",
         "size": 2345678,
-        "url": "/drawings/valve-body.dwg",
-        "uploadedAt": "2026-06-25T15:10:00Z"
+        "url": "/api/orders/drawings/dr019",
+        "uploadedAt": "2026-06-25T15:10:00Z",
+        "uploader": "系统",
+        "version": 1,
+        "isCurrent": true
       }
     ],
     "status": "processing",
@@ -1142,8 +1199,11 @@
         "name": "活塞零件图.pdf",
         "type": "application/pdf",
         "size": 1876543,
-        "url": "/drawings/piston.pdf",
-        "uploadedAt": "2026-06-28T11:20:00Z"
+        "url": "/api/orders/drawings/dr020",
+        "uploadedAt": "2026-06-28T11:20:00Z",
+        "uploader": "系统",
+        "version": 1,
+        "isCurrent": true
       }
     ],
     "status": "inspecting",

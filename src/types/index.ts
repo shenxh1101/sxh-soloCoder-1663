@@ -18,9 +18,13 @@ export interface DrawingFile {
   size: number;
   url: string;
   uploadedAt: string;
+  uploader: string;
+  version: number;
+  isCurrent: boolean;
+  parentId?: string;
 }
 
-export type OperationType = 'create' | 'dispatch' | 'process_complete' | 'inspect_submit' | 'inspect_pass' | 'reject' | 'reinspect' | 'drawing_upload' | 'drawing_delete';
+export type OperationType = 'create' | 'dispatch' | 'process_complete' | 'inspect_submit' | 'inspect_pass' | 'inspect_fail' | 'reject' | 'reinspect' | 'drawing_upload' | 'drawing_replace' | 'drawing_delete' | 'drawing_rollback';
 
 export interface OperationLog {
   id: string;

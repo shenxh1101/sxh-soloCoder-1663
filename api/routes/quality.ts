@@ -1,6 +1,21 @@
 import { Router, type Request, type Response } from 'express';
 import { readDataFile, writeDataFile, generateId } from '../utils/db.js';
-import type { QualityInspection, DefectType, QualityTrendPoint, Order, Supplier } from '../../shared/types.js';
+import type { QualityInspection, DefectType, QualityTrendPoint, Order, Supplier, OperationLog, OperationType } from '../../shared/types.js';
+
+function addOperationLog(order: Order, type: OperationType, title: string, description: string, operator: string = '系统'): void {
+  const log: OperationLog = {
+    id: generateId('log'),
+    type,
+    title,
+    description,
+    operator,
+    createdAt: new Date().toISOString(),
+  };
+  if (!order.operationLogs) {
+    order.operationLogs = [];
+  }
+  order.operationLogs.push(log);
+}
 
 const router = Router();
 
@@ -227,11 +242,39 @@ router.post('/', async (req: Request, res: Response): Promise<void> => {
     
     const orderIndex = orders.findIndex(o => o.id === req.body.orderId);
     if (orderIndex >= 0) {
+      const targetOrder = orders[orderIndex];
+      const inspector = req.body.inspector || '系统';
+      
+      addOperationLog(
+        targetOrder,
+        'inspect_submit',
+        '提交质检',
+        `第 ${inspectionRound} 次提交质检，合格 ${qualifiedQuantity} 件，不良 ${unqualifiedQuantity} 件`,
+        inspector
+      );
+      
       if (unqualifiedQuantity === 0) {
-        orders[orderIndex].status = 'completed';
-        orders[orderIndex].actualDeliveryDate = new Date().toISOString().split('T')[0];
+        targetOrder.status = 'completed';
+        targetOrder.actualDeliveryDate = new Date().toISOString().split('T')[0];
+        addOperationLog(
+          targetOrder,
+          'inspect_pass',
+          '质检通过',
+          `第 ${inspectionRound} 次质检全部合格，订单完成`,
+          inspector
+        );
+      } else {
+        addOperationLog(
+          targetOrder,
+          'inspect_fail',
+          '质检不合格',
+          `第 ${inspectionRound} 次质检发现 ${unqualifiedQuantity} 件不良，合格率 ${passRate}%`,
+          inspector
+        );
       }
-      orders[orderIndex].updatedAt = new Date().toISOString();
+      
+      targetOrder.updatedAt = new Date().toISOString();
+      orders[orderIndex] = targetOrder;
       await writeDataFile('orders.json', orders);
     }
     

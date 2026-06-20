@@ -18,6 +18,8 @@ import {
   Trash2,
   RefreshCw,
   ClipboardList,
+  RotateCcw,
+  History,
 } from 'lucide-react';
 import { orderApi, qualityApi } from '../services/api';
 import type { Order, QualityInspection, OrderStatus, DrawingFile } from '@/types';
@@ -34,6 +36,32 @@ export default function OrderDetail() {
   const [uploading, setUploading] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [replaceDrawingId, setReplaceDrawingId] = useState<string | null>(null);
+  const [expandedDrawingNames, setExpandedDrawingNames] = useState<Set<string>>(new Set());
+
+  const toggleDrawingExpand = (name: string) => {
+    const newSet = new Set(expandedDrawingNames);
+    if (newSet.has(name)) {
+      newSet.delete(name);
+    } else {
+      newSet.add(name);
+    }
+    setExpandedDrawingNames(newSet);
+  };
+
+  const getDrawingsGroupedByName = () => {
+    if (!order?.drawings) return [];
+    const map = new Map<string, DrawingFile[]>();
+    order.drawings.forEach(d => {
+      const list = map.get(d.name) || [];
+      list.push(d);
+      map.set(d.name, list);
+    });
+    return Array.from(map.entries()).map(([name, versions]) => ({
+      name,
+      versions: versions.sort((a, b) => (b.version || 1) - (a.version || 1)),
+      current: versions.find(v => v.isCurrent) || versions[0],
+    }));
+  };
 
   useEffect(() => {
     if (id) {
@@ -132,11 +160,7 @@ export default function OrderDetail() {
         })
       );
       
-      if (replaceDrawingId) {
-        await orderApi.deleteDrawing(id!, replaceDrawingId);
-      }
-      
-      const updated = await orderApi.uploadDrawings(id!, drawingsToUpload);
+      const updated = await orderApi.uploadDrawings(id!, drawingsToUpload, replaceDrawingId || undefined);
       setOrder(updated);
       setReplaceDrawingId(null);
     } catch (error) {
@@ -147,6 +171,18 @@ export default function OrderDetail() {
       if (fileInputRef.current) {
         fileInputRef.current.value = '';
       }
+    }
+  };
+
+  const handleRollbackDrawing = async (drawingId: string, version: number, drawingName: string) => {
+    if (!confirm(`确定要将「${drawingName}」回退到 v${version} 版本吗？`)) return;
+    
+    try {
+      const updated = await orderApi.rollbackDrawing(id!, drawingId);
+      setOrder(updated);
+    } catch (error) {
+      console.error('Failed to rollback drawing:', error);
+      alert('回退失败');
     }
   };
 
@@ -187,10 +223,13 @@ export default function OrderDetail() {
       process_complete: Package,
       inspect_submit: ClipboardList,
       inspect_pass: CheckCircle2,
+      inspect_fail: XCircle,
       reject: XCircle,
       reinspect: RefreshCw,
       drawing_upload: Upload,
+      drawing_replace: RefreshCw,
       drawing_delete: Trash2,
+      drawing_rollback: RotateCcw,
     };
 
     const sortedLogs = [...order.operationLogs].sort(
@@ -510,56 +549,120 @@ export default function OrderDetail() {
               <p className="text-sm text-gray-400">暂无图纸</p>
             ) : (
               <div className="space-y-3">
-                {order.drawings.map((drawing) => (
-                  <div
-                    key={drawing.id}
-                    className="flex items-center justify-between rounded-lg border border-gray-100 p-3 transition-colors hover:bg-gray-50"
-                  >
-                    <div className="flex items-center gap-3">
-                      <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-blue-50">
-                        <FileText className="h-5 w-5 text-blue-600" />
+                {getDrawingsGroupedByName().map((group) => {
+                  const isExpanded = expandedDrawingNames.has(group.name);
+                  const current = group.current;
+                  return (
+                    <div key={group.name} className="rounded-lg border border-gray-100 overflow-hidden">
+                      <div className="flex items-center justify-between p-3 hover:bg-gray-50 transition-colors">
+                        <div className="flex items-center gap-3 flex-1 min-w-0">
+                          <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-blue-50 flex-shrink-0">
+                            <FileText className="h-5 w-5 text-blue-600" />
+                          </div>
+                          <div className="min-w-0 flex-1">
+                            <div className="flex items-center gap-2">
+                              <p className="text-sm font-medium text-gray-700 truncate">
+                                {current.name}
+                              </p>
+                              <span className="inline-flex items-center rounded-full bg-emerald-100 px-2 py-0.5 text-xs font-medium text-emerald-700">
+                                v{current.version || 1} 当前
+                              </span>
+                            </div>
+                            <p className="text-xs text-gray-400">
+                              {formatFileSize(current.size)} · 上传人：{current.uploader || '系统'} · {formatDate(current.uploadedAt)}
+                            </p>
+                          </div>
+                        </div>
+                        <div className="flex items-center gap-1">
+                          {group.versions.length > 1 && (
+                            <button
+                              onClick={() => toggleDrawingExpand(group.name)}
+                              className="rounded-md p-1.5 text-gray-400 hover:bg-gray-100 hover:text-blue-600"
+                              title="历史版本"
+                            >
+                              <History className="h-4 w-4" />
+                            </button>
+                          )}
+                          {current.name.toLowerCase().endsWith('.pdf') && (
+                            <button
+                              onClick={() => handlePreview(current)}
+                              className="rounded-md p-1.5 text-gray-400 hover:bg-gray-100 hover:text-blue-600"
+                              title="预览"
+                            >
+                              <Eye className="h-4 w-4" />
+                            </button>
+                          )}
+                          <button
+                            onClick={() => handleReplaceClick(current.id)}
+                            className="rounded-md p-1.5 text-gray-400 hover:bg-gray-100 hover:text-green-600"
+                            title="替换"
+                          >
+                            <RefreshCw className="h-4 w-4" />
+                          </button>
+                          <button
+                            onClick={() => handleDeleteDrawing(current.id, current.name)}
+                            className="rounded-md p-1.5 text-gray-400 hover:bg-gray-100 hover:text-red-600"
+                            title="删除"
+                          >
+                            <Trash2 className="h-4 w-4" />
+                          </button>
+                          <button
+                            onClick={() => window.open(current.url, '_blank')}
+                            className="rounded-md p-1.5 text-gray-400 hover:bg-gray-100 hover:text-gray-600"
+                            title="下载"
+                          >
+                            <Download className="h-4 w-4" />
+                          </button>
+                        </div>
                       </div>
-                      <div>
-                        <p className="text-sm font-medium text-gray-700 truncate max-w-[130px]">
-                          {drawing.name}
-                        </p>
-                        <p className="text-xs text-gray-400">{formatFileSize(drawing.size)}</p>
-                      </div>
-                    </div>
-                    <div className="flex gap-1">
-                      {drawing.name.toLowerCase().endsWith('.pdf') && (
-                        <button
-                          onClick={() => handlePreview(drawing)}
-                          className="rounded-md p-1.5 text-gray-400 hover:bg-gray-100 hover:text-blue-600"
-                          title="预览"
-                        >
-                          <Eye className="h-4 w-4" />
-                        </button>
+                      
+                      {isExpanded && group.versions.length > 1 && (
+                        <div className="border-t border-gray-100 bg-gray-50 p-3 space-y-2">
+                          <p className="text-xs font-medium text-gray-500 mb-2">历史版本</p>
+                          {group.versions.filter(v => !v.isCurrent).map((v) => (
+                            <div key={v.id} className="flex items-center justify-between rounded-md bg-white p-2 border border-gray-200">
+                              <div className="flex items-center gap-2 min-w-0 flex-1">
+                                <span className="inline-flex items-center rounded-full bg-gray-100 px-2 py-0.5 text-xs font-medium text-gray-600">
+                                  v{v.version || 1}
+                                </span>
+                                <div className="min-w-0 flex-1">
+                                  <p className="text-xs text-gray-600 truncate">
+                                    {formatFileSize(v.size)} · {v.uploader || '系统'} · {formatDate(v.uploadedAt)}
+                                  </p>
+                                </div>
+                              </div>
+                              <div className="flex gap-1 flex-shrink-0">
+                                {v.name.toLowerCase().endsWith('.pdf') && (
+                                  <button
+                                    onClick={() => handlePreview(v)}
+                                    className="rounded p-1 text-gray-400 hover:bg-gray-100 hover:text-blue-600"
+                                    title="预览"
+                                  >
+                                    <Eye className="h-3.5 w-3.5" />
+                                  </button>
+                                )}
+                                <button
+                                  onClick={() => handleRollbackDrawing(v.id, v.version || 1, v.name)}
+                                  className="rounded p-1 text-gray-400 hover:bg-gray-100 hover:text-amber-600"
+                                  title="回退到此版本"
+                                >
+                                  <RotateCcw className="h-3.5 w-3.5" />
+                                </button>
+                                <button
+                                  onClick={() => window.open(v.url, '_blank')}
+                                  className="rounded p-1 text-gray-400 hover:bg-gray-100 hover:text-gray-600"
+                                  title="下载此版本"
+                                >
+                                  <Download className="h-3.5 w-3.5" />
+                                </button>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
                       )}
-                      <button
-                        onClick={() => handleReplaceClick(drawing.id)}
-                        className="rounded-md p-1.5 text-gray-400 hover:bg-gray-100 hover:text-green-600"
-                        title="替换"
-                      >
-                        <RefreshCw className="h-4 w-4" />
-                      </button>
-                      <button
-                        onClick={() => handleDeleteDrawing(drawing.id, drawing.name)}
-                        className="rounded-md p-1.5 text-gray-400 hover:bg-gray-100 hover:text-red-600"
-                        title="删除"
-                      >
-                        <Trash2 className="h-4 w-4" />
-                      </button>
-                      <button
-                        onClick={() => window.open(drawing.url, '_blank')}
-                        className="rounded-md p-1.5 text-gray-400 hover:bg-gray-100 hover:text-gray-600"
-                        title="下载"
-                      >
-                        <Download className="h-4 w-4" />
-                      </button>
                     </div>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
             )}
           </div>
