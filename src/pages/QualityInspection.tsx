@@ -7,6 +7,7 @@ import {
   Plus,
   X,
   Clock,
+  RefreshCw,
 } from 'lucide-react';
 import { qualityApi, orderApi } from '../services/api';
 import type { QualityInspection, Order, DefectType } from '@/types';
@@ -134,6 +135,19 @@ export default function QualityInspectionPage() {
     } catch (error) {
       console.error('Failed to submit inspection:', error);
       alert('提交质检记录失败，请重试');
+    }
+  };
+
+  const handleReinspect = async (orderId: string, orderNo: string) => {
+    if (!confirm(`确定要将订单「${orderNo}」退回重检吗？退回后供应商需要重新加工并再次提交质检。`)) return;
+    
+    try {
+      await orderApi.updateStatus(orderId, 'processing');
+      loadRecords();
+      loadInspectingOrders();
+    } catch (error) {
+      console.error('Failed to reinspect:', error);
+      alert('退回重检失败，请重试');
     }
   };
 
@@ -280,7 +294,10 @@ export default function QualityInspectionPage() {
                     订单编号
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    零件名称
+                    质检轮次
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    检验结果
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     检验员
@@ -294,39 +311,76 @@ export default function QualityInspectionPage() {
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     检验时间
                   </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    操作
+                  </th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-100">
                 {records
                   .filter((r) => r.qualifiedQuantity > 0)
-                  .map((record) => (
-                    <tr key={record.id} className="transition-colors hover:bg-gray-50">
-                      <td className="px-6 py-4">
-                        <span className="font-medium text-blue-600">{record.orderNo}</span>
-                      </td>
-                      <td className="px-6 py-4 text-sm text-gray-700">-</td>
-                      <td className="px-6 py-4 text-sm text-gray-600">{record.inspector}</td>
-                      <td className="px-6 py-4">
-                        <span
-                          className={`text-sm font-medium ${
-                            record.passRate >= 98
-                              ? 'text-green-600'
-                              : record.passRate >= 95
-                              ? 'text-blue-600'
-                              : 'text-orange-600'
-                          }`}
-                        >
-                          {record.passRate}%
-                        </span>
-                      </td>
-                      <td className="px-6 py-4 text-sm text-gray-600">
-                        <span className="text-green-600">{record.qualifiedQuantity}</span>
-                        <span className="mx-1 text-gray-400">/</span>
-                        <span className="text-red-500">{record.unqualifiedQuantity}</span>
-                      </td>
-                      <td className="px-6 py-4 text-sm text-gray-500">{formatDate(record.inspectedAt)}</td>
-                    </tr>
-                  ))}
+                  .map((record) => {
+                    const isPassed = record.unqualifiedQuantity === 0;
+                    const order = inspectingOrders.find(o => o.id === record.orderId);
+                    const canReinspect = !isPassed && !!order;
+                    
+                    return (
+                      <tr key={record.id} className="transition-colors hover:bg-gray-50">
+                        <td className="px-6 py-4">
+                          <span className="font-medium text-blue-600">{record.orderNo}</span>
+                        </td>
+                        <td className="px-6 py-4">
+                          <span className="inline-flex items-center rounded-full bg-purple-100 px-2.5 py-0.5 text-xs font-medium text-purple-700">
+                            第 {record.inspectionRound || 1} 次
+                          </span>
+                        </td>
+                        <td className="px-6 py-4">
+                          {isPassed ? (
+                            <span className="inline-flex items-center gap-1 rounded-full bg-green-100 px-2.5 py-0.5 text-xs font-medium text-green-700">
+                              <CheckCircle2 className="h-3 w-3" />
+                              合格
+                            </span>
+                          ) : (
+                            <span className="inline-flex items-center gap-1 rounded-full bg-orange-100 px-2.5 py-0.5 text-xs font-medium text-orange-700">
+                              <XCircle className="h-3 w-3" />
+                              不合格
+                            </span>
+                          )}
+                        </td>
+                        <td className="px-6 py-4 text-sm text-gray-600">{record.inspector}</td>
+                        <td className="px-6 py-4">
+                          <span
+                            className={`text-sm font-medium ${
+                              record.passRate >= 98
+                                ? 'text-green-600'
+                                : record.passRate >= 95
+                                ? 'text-blue-600'
+                                : 'text-orange-600'
+                            }`}
+                          >
+                            {record.passRate}%
+                          </span>
+                        </td>
+                        <td className="px-6 py-4 text-sm text-gray-600">
+                          <span className="text-green-600">{record.qualifiedQuantity}</span>
+                          <span className="mx-1 text-gray-400">/</span>
+                          <span className="text-red-500">{record.unqualifiedQuantity}</span>
+                        </td>
+                        <td className="px-6 py-4 text-sm text-gray-500">{formatDate(record.inspectedAt)}</td>
+                        <td className="px-6 py-4">
+                          {canReinspect && (
+                            <button
+                              onClick={() => handleReinspect(record.orderId, record.orderNo)}
+                              className="flex items-center gap-1 text-sm text-orange-600 hover:text-orange-700"
+                            >
+                              <RefreshCw className="h-4 w-4" />
+                              退回重检
+                            </button>
+                          )}
+                        </td>
+                      </tr>
+                    );
+                  })}
               </tbody>
             </table>
           </div>

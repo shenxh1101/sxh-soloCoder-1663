@@ -1,83 +1,5 @@
 [
   {
-    "id": "omqmv41ghl8gf1v",
-    "orderNo": "TEST-UPLOAD-001",
-    "partName": "测试上传零件",
-    "partNo": "TEST-001",
-    "quantity": 100,
-    "unitPrice": 50,
-    "totalPrice": 5000,
-    "deliveryDate": "2026-08-01",
-    "supplierId": "s001",
-    "supplierName": "华盛精密机械有限公司",
-    "drawings": [
-      {
-        "id": "drmqmv41ggskglz4",
-        "name": "测试图纸.pdf",
-        "type": "application/pdf",
-        "size": 53,
-        "url": "/api/orders/drawings/drmqmv41ggskglz4",
-        "uploadedAt": "2026-06-20T21:21:03.329Z"
-      }
-    ],
-    "status": "pending",
-    "remark": "测试图纸上传功能",
-    "createdAt": "2026-06-20T21:21:03.329Z",
-    "updatedAt": "2026-06-20T21:21:03.329Z"
-  },
-  {
-    "id": "omqmv3kaee9b67n",
-    "orderNo": "TEST-UPLOAD-001",
-    "partName": "测试上传零件",
-    "partNo": "TEST-001",
-    "quantity": 100,
-    "unitPrice": 50,
-    "totalPrice": 5000,
-    "deliveryDate": "2026-08-01",
-    "supplierId": "s001",
-    "supplierName": "华盛精密机械有限公司",
-    "drawings": [
-      {
-        "id": "drmqmv3kadzmbekp",
-        "name": "测试图纸.pdf",
-        "type": "application/pdf",
-        "size": 53,
-        "url": "/api/orders/drawings/drmqmv3kadzmbekp",
-        "uploadedAt": "2026-06-20T21:20:41.078Z"
-      }
-    ],
-    "status": "pending",
-    "remark": "测试图纸上传功能",
-    "createdAt": "2026-06-20T21:20:41.078Z",
-    "updatedAt": "2026-06-20T21:20:41.078Z"
-  },
-  {
-    "id": "omqmv0898a8sod9",
-    "orderNo": "TEST-UPLOAD-001",
-    "partName": "测试上传零件",
-    "partNo": "TEST-001",
-    "quantity": 100,
-    "unitPrice": 50,
-    "totalPrice": 5000,
-    "deliveryDate": "2026-08-01",
-    "supplierId": "s001",
-    "supplierName": "华盛精密机械有限公司",
-    "drawings": [
-      {
-        "id": "drmqmv0897iap2od",
-        "name": "测试图纸.pdf",
-        "type": "application/pdf",
-        "size": 53,
-        "url": "/api/orders/drawings/drmqmv0897iap2od",
-        "uploadedAt": "2026-06-20T21:18:05.516Z"
-      }
-    ],
-    "status": "pending",
-    "remark": "测试图纸上传功能",
-    "createdAt": "2026-06-20T21:18:05.516Z",
-    "updatedAt": "2026-06-20T21:18:05.516Z"
-  },
-  {
     "id": "o001",
     "orderNo": "WX202606001",
     "partName": "法兰盘",
@@ -102,7 +24,49 @@
     "status": "completed",
     "remark": "需要表面发黑处理",
     "createdAt": "2026-06-10T09:00:00.000Z",
-    "updatedAt": "2026-06-13T14:20:00.000Z"
+    "updatedAt": "2026-06-13T14:20:00.000Z",
+    "operationLogs": [
+      {
+        "id": "logvcrb1ocz0hm",
+        "type": "create",
+        "title": "订单创建",
+        "description": "技术部创建订单 WX202606001",
+        "operator": "系统",
+        "createdAt": "2026-06-10T09:00:00.000Z"
+      },
+      {
+        "id": "logmrmz0lyfj6s",
+        "type": "drawing_upload",
+        "title": "图纸上传",
+        "description": "上传图纸：法兰盘图纸_A版.pdf",
+        "operator": "系统",
+        "createdAt": "2026-06-10T09:30:00.000Z"
+      },
+      {
+        "id": "logcu9kja1h8mi",
+        "type": "dispatch",
+        "title": "供应商接单",
+        "description": "华盛精密机械有限公司 接收订单",
+        "operator": "华盛精密机械有限公司",
+        "createdAt": "2026-06-10T11:00:00.000Z"
+      },
+      {
+        "id": "logqv3aa1uhjs",
+        "type": "process_complete",
+        "title": "加工完成",
+        "description": "供应商完成生产加工",
+        "operator": "华盛精密机械有限公司",
+        "createdAt": "2026-06-12T09:00:00.000Z"
+      },
+      {
+        "id": "logbtbdu1kbf64",
+        "type": "inspect_pass",
+        "title": "质检通过",
+        "description": "订单质检合格，已完成入库",
+        "operator": "质检员",
+        "createdAt": "2026-06-12T11:00:00.000Z"
+      }
+    ]
   },
   {
     "id": "o002",
@@ -128,7 +92,33 @@
     "status": "processing",
     "remark": "需严格保证同轴度",
     "createdAt": "2026-06-12T10:30:00Z",
-    "updatedAt": "2026-06-15T08:45:00Z"
+    "updatedAt": "2026-06-15T08:45:00Z",
+    "operationLogs": [
+      {
+        "id": "loge56nloe4gq4",
+        "type": "create",
+        "title": "订单创建",
+        "description": "技术部创建订单 WX202606002",
+        "operator": "系统",
+        "createdAt": "2026-06-12T10:30:00.000Z"
+      },
+      {
+        "id": "logg4ejn7nid5r",
+        "type": "drawing_upload",
+        "title": "图纸上传",
+        "description": "上传图纸：轴承座装配图.dwg",
+        "operator": "系统",
+        "createdAt": "2026-06-12T11:00:00.000Z"
+      },
+      {
+        "id": "logbjcqsdaxbq6",
+        "type": "dispatch",
+        "title": "供应商接单",
+        "description": "顺达五金制品厂 接收订单",
+        "operator": "顺达五金制品厂",
+        "createdAt": "2026-06-12T12:30:00.000Z"
+      }
+    ]
   },
   {
     "id": "o003",
@@ -155,7 +145,49 @@
     "status": "completed",
     "remark": "材料45#钢，调质处理",
     "createdAt": "2026-04-10T14:00:00Z",
-    "updatedAt": "2026-04-26T10:00:00Z"
+    "updatedAt": "2026-04-26T10:00:00Z",
+    "operationLogs": [
+      {
+        "id": "logwlgx90g575l",
+        "type": "create",
+        "title": "订单创建",
+        "description": "技术部创建订单 WX202606003",
+        "operator": "系统",
+        "createdAt": "2026-04-10T14:00:00.000Z"
+      },
+      {
+        "id": "logvumpj4negx",
+        "type": "drawing_upload",
+        "title": "图纸上传",
+        "description": "上传图纸：齿轮轴零件图.pdf",
+        "operator": "系统",
+        "createdAt": "2026-04-10T14:30:00.000Z"
+      },
+      {
+        "id": "lognh0ux87m1ul",
+        "type": "dispatch",
+        "title": "供应商接单",
+        "description": "宏达精密零部件有限公司 接收订单",
+        "operator": "宏达精密零部件有限公司",
+        "createdAt": "2026-04-10T16:00:00.000Z"
+      },
+      {
+        "id": "loggx9s8jmrur",
+        "type": "process_complete",
+        "title": "加工完成",
+        "description": "供应商完成生产加工",
+        "operator": "宏达精密零部件有限公司",
+        "createdAt": "2026-04-12T14:00:00.000Z"
+      },
+      {
+        "id": "logu5s2pzwmazb",
+        "type": "inspect_pass",
+        "title": "质检通过",
+        "description": "订单质检合格，已完成入库",
+        "operator": "质检员",
+        "createdAt": "2026-04-12T16:00:00.000Z"
+      }
+    ]
   },
   {
     "id": "o004",
@@ -181,7 +213,25 @@
     "status": "pending",
     "remark": "需做去毛刺处理",
     "createdAt": "2026-06-15T08:30:00Z",
-    "updatedAt": "2026-06-15T08:30:00Z"
+    "updatedAt": "2026-06-15T08:30:00Z",
+    "operationLogs": [
+      {
+        "id": "logp9ys59w275",
+        "type": "create",
+        "title": "订单创建",
+        "description": "技术部创建订单 WX202606004",
+        "operator": "系统",
+        "createdAt": "2026-06-15T08:30:00.000Z"
+      },
+      {
+        "id": "loggvp0b2zkttm",
+        "type": "drawing_upload",
+        "title": "图纸上传",
+        "description": "上传图纸：支撑板下料图.pdf",
+        "operator": "系统",
+        "createdAt": "2026-06-15T09:00:00.000Z"
+      }
+    ]
   },
   {
     "id": "o005",
@@ -208,7 +258,49 @@
     "status": "completed",
     "remark": "不锈钢304材质",
     "createdAt": "2026-05-05T09:30:00.000Z",
-    "updatedAt": "2026-05-19T11:20:00.000Z"
+    "updatedAt": "2026-05-19T11:20:00.000Z",
+    "operationLogs": [
+      {
+        "id": "logr0wrjf3vjli",
+        "type": "create",
+        "title": "订单创建",
+        "description": "技术部创建订单 WX202606005",
+        "operator": "系统",
+        "createdAt": "2026-05-05T09:30:00.000Z"
+      },
+      {
+        "id": "logpd8eibejf7j",
+        "type": "drawing_upload",
+        "title": "图纸上传",
+        "description": "上传图纸：连接法兰图.dwg",
+        "operator": "系统",
+        "createdAt": "2026-05-05T10:00:00.000Z"
+      },
+      {
+        "id": "logneamkk0f0p",
+        "type": "dispatch",
+        "title": "供应商接单",
+        "description": "华盛精密机械有限公司 接收订单",
+        "operator": "华盛精密机械有限公司",
+        "createdAt": "2026-05-05T11:30:00.000Z"
+      },
+      {
+        "id": "logw8s3qm37ydm",
+        "type": "process_complete",
+        "title": "加工完成",
+        "description": "供应商完成生产加工",
+        "operator": "华盛精密机械有限公司",
+        "createdAt": "2026-05-07T09:30:00.000Z"
+      },
+      {
+        "id": "logr35c3rr6ryj",
+        "type": "inspect_pass",
+        "title": "质检通过",
+        "description": "订单质检合格，已完成入库",
+        "operator": "质检员",
+        "createdAt": "2026-05-07T11:30:00.000Z"
+      }
+    ]
   },
   {
     "id": "o006",
@@ -234,7 +326,33 @@
     "status": "processing",
     "remark": "表面高频淬火HRC58-62",
     "createdAt": "2026-06-18T13:30:00Z",
-    "updatedAt": "2026-06-20T09:15:00Z"
+    "updatedAt": "2026-06-20T09:15:00Z",
+    "operationLogs": [
+      {
+        "id": "logo69nemzmsj",
+        "type": "create",
+        "title": "订单创建",
+        "description": "技术部创建订单 WX202606006",
+        "operator": "系统",
+        "createdAt": "2026-06-18T13:30:00.000Z"
+      },
+      {
+        "id": "logxpeodjn9nx",
+        "type": "drawing_upload",
+        "title": "图纸上传",
+        "description": "上传图纸：导向轴零件图.pdf",
+        "operator": "系统",
+        "createdAt": "2026-06-18T14:00:00.000Z"
+      },
+      {
+        "id": "logfpvdzgmp71",
+        "type": "dispatch",
+        "title": "供应商接单",
+        "description": "宏达精密零部件有限公司 接收订单",
+        "operator": "宏达精密零部件有限公司",
+        "createdAt": "2026-06-18T15:30:00.000Z"
+      }
+    ]
   },
   {
     "id": "o007",
@@ -261,7 +379,49 @@
     "status": "completed",
     "remark": "铸铁件，表面喷漆",
     "createdAt": "2026-06-10T16:00:00.000Z",
-    "updatedAt": "2026-06-29T10:45:00.000Z"
+    "updatedAt": "2026-06-29T10:45:00.000Z",
+    "operationLogs": [
+      {
+        "id": "log5bmvuk0ja85",
+        "type": "create",
+        "title": "订单创建",
+        "description": "技术部创建订单 WX202606007",
+        "operator": "系统",
+        "createdAt": "2026-06-10T16:00:00.000Z"
+      },
+      {
+        "id": "logrt1n6340l8b",
+        "type": "drawing_upload",
+        "title": "图纸上传",
+        "description": "上传图纸：压盖图纸.pdf",
+        "operator": "系统",
+        "createdAt": "2026-06-10T16:30:00.000Z"
+      },
+      {
+        "id": "logxiqexet61x",
+        "type": "dispatch",
+        "title": "供应商接单",
+        "description": "顺达五金制品厂 接收订单",
+        "operator": "顺达五金制品厂",
+        "createdAt": "2026-06-10T18:00:00.000Z"
+      },
+      {
+        "id": "log28k5l1w3rrw",
+        "type": "process_complete",
+        "title": "加工完成",
+        "description": "供应商完成生产加工",
+        "operator": "顺达五金制品厂",
+        "createdAt": "2026-06-12T16:00:00.000Z"
+      },
+      {
+        "id": "logl5dutxo7om",
+        "type": "inspect_pass",
+        "title": "质检通过",
+        "description": "订单质检合格，已完成入库",
+        "operator": "质检员",
+        "createdAt": "2026-06-12T18:00:00.000Z"
+      }
+    ]
   },
   {
     "id": "o008",
@@ -287,7 +447,25 @@
     "status": "pending",
     "remark": "弹性联轴器，需做动平衡",
     "createdAt": "2026-06-20T11:00:00Z",
-    "updatedAt": "2026-06-20T11:00:00Z"
+    "updatedAt": "2026-06-20T11:00:00Z",
+    "operationLogs": [
+      {
+        "id": "loge2ui9rprwwm",
+        "type": "create",
+        "title": "订单创建",
+        "description": "技术部创建订单 WX202606008",
+        "operator": "系统",
+        "createdAt": "2026-06-20T11:00:00.000Z"
+      },
+      {
+        "id": "logc1f92u7cpuw",
+        "type": "drawing_upload",
+        "title": "图纸上传",
+        "description": "上传图纸：联轴器装配图.dwg",
+        "operator": "系统",
+        "createdAt": "2026-06-20T11:30:00.000Z"
+      }
+    ]
   },
   {
     "id": "o009",
@@ -314,7 +492,49 @@
     "status": "completed",
     "remark": "焊接件，需做应力消除",
     "createdAt": "2026-05-12T09:00:00.000Z",
-    "updatedAt": "2026-05-11T15:30:00.000Z"
+    "updatedAt": "2026-05-11T15:30:00.000Z",
+    "operationLogs": [
+      {
+        "id": "logbokc110tyqu",
+        "type": "create",
+        "title": "订单创建",
+        "description": "技术部创建订单 WX202606009",
+        "operator": "系统",
+        "createdAt": "2026-05-12T09:00:00.000Z"
+      },
+      {
+        "id": "logwyrrisvkjhg",
+        "type": "drawing_upload",
+        "title": "图纸上传",
+        "description": "上传图纸：支架焊接图.pdf",
+        "operator": "系统",
+        "createdAt": "2026-05-12T09:30:00.000Z"
+      },
+      {
+        "id": "logwwgbetryxj",
+        "type": "dispatch",
+        "title": "供应商接单",
+        "description": "宏达精密零部件有限公司 接收订单",
+        "operator": "宏达精密零部件有限公司",
+        "createdAt": "2026-05-12T11:00:00.000Z"
+      },
+      {
+        "id": "logq75ol37izv",
+        "type": "process_complete",
+        "title": "加工完成",
+        "description": "供应商完成生产加工",
+        "operator": "宏达精密零部件有限公司",
+        "createdAt": "2026-05-14T09:00:00.000Z"
+      },
+      {
+        "id": "log8hrtfzhzh9e",
+        "type": "inspect_pass",
+        "title": "质检通过",
+        "description": "订单质检合格，已完成入库",
+        "operator": "质检员",
+        "createdAt": "2026-05-14T11:00:00.000Z"
+      }
+    ]
   },
   {
     "id": "o010",
@@ -340,7 +560,33 @@
     "status": "processing",
     "remark": "黄铜材质",
     "createdAt": "2026-06-22T14:00:00Z",
-    "updatedAt": "2026-06-25T08:30:00Z"
+    "updatedAt": "2026-06-25T08:30:00Z",
+    "operationLogs": [
+      {
+        "id": "log1844smp13k6",
+        "type": "create",
+        "title": "订单创建",
+        "description": "技术部创建订单 WX202606010",
+        "operator": "系统",
+        "createdAt": "2026-06-22T14:00:00.000Z"
+      },
+      {
+        "id": "logwkw8f3ye32p",
+        "type": "drawing_upload",
+        "title": "图纸上传",
+        "description": "上传图纸：螺母座零件图.dwg",
+        "operator": "系统",
+        "createdAt": "2026-06-22T14:30:00.000Z"
+      },
+      {
+        "id": "logrgmjc58348",
+        "type": "dispatch",
+        "title": "供应商接单",
+        "description": "华盛精密机械有限公司 接收订单",
+        "operator": "华盛精密机械有限公司",
+        "createdAt": "2026-06-22T16:00:00.000Z"
+      }
+    ]
   },
   {
     "id": "o011",
@@ -367,7 +613,49 @@
     "status": "completed",
     "remark": "铝合金压铸件",
     "createdAt": "2026-04-08T10:00:00Z",
-    "updatedAt": "2026-04-29T09:00:00Z"
+    "updatedAt": "2026-04-29T09:00:00Z",
+    "operationLogs": [
+      {
+        "id": "log0rt09quskq2",
+        "type": "create",
+        "title": "订单创建",
+        "description": "技术部创建订单 WX202606011",
+        "operator": "系统",
+        "createdAt": "2026-04-08T10:00:00.000Z"
+      },
+      {
+        "id": "logdzs5bkzegce",
+        "type": "drawing_upload",
+        "title": "图纸上传",
+        "description": "上传图纸：端盖图纸.pdf",
+        "operator": "系统",
+        "createdAt": "2026-04-08T10:30:00.000Z"
+      },
+      {
+        "id": "logckms2qb2kco",
+        "type": "dispatch",
+        "title": "供应商接单",
+        "description": "顺达五金制品厂 接收订单",
+        "operator": "顺达五金制品厂",
+        "createdAt": "2026-04-08T12:00:00.000Z"
+      },
+      {
+        "id": "logr7rscudl5i",
+        "type": "process_complete",
+        "title": "加工完成",
+        "description": "供应商完成生产加工",
+        "operator": "顺达五金制品厂",
+        "createdAt": "2026-04-10T10:00:00.000Z"
+      },
+      {
+        "id": "logl0fu4bvcptl",
+        "type": "inspect_pass",
+        "title": "质检通过",
+        "description": "订单质检合格，已完成入库",
+        "operator": "质检员",
+        "createdAt": "2026-04-10T12:00:00.000Z"
+      }
+    ]
   },
   {
     "id": "o012",
@@ -393,7 +681,25 @@
     "status": "pending",
     "remark": "C7级精度",
     "createdAt": "2026-06-28T11:30:00Z",
-    "updatedAt": "2026-06-28T11:30:00Z"
+    "updatedAt": "2026-06-28T11:30:00Z",
+    "operationLogs": [
+      {
+        "id": "logshmybsbs92h",
+        "type": "create",
+        "title": "订单创建",
+        "description": "技术部创建订单 WX202606012",
+        "operator": "系统",
+        "createdAt": "2026-06-28T11:30:00.000Z"
+      },
+      {
+        "id": "logem3hgcz6745",
+        "type": "drawing_upload",
+        "title": "图纸上传",
+        "description": "上传图纸：滚珠丝杆装配图.pdf",
+        "operator": "系统",
+        "createdAt": "2026-06-28T12:00:00.000Z"
+      }
+    ]
   },
   {
     "id": "o013",
@@ -420,7 +726,49 @@
     "status": "completed",
     "remark": "45号钢调质",
     "createdAt": "2026-06-15T15:00:00.000Z",
-    "updatedAt": "2026-06-08T10:20:00.000Z"
+    "updatedAt": "2026-06-08T10:20:00.000Z",
+    "operationLogs": [
+      {
+        "id": "log23v47y9jemfj",
+        "type": "create",
+        "title": "订单创建",
+        "description": "技术部创建订单 WX202606013",
+        "operator": "系统",
+        "createdAt": "2026-06-15T15:00:00.000Z"
+      },
+      {
+        "id": "logkzaetoslcrm",
+        "type": "drawing_upload",
+        "title": "图纸上传",
+        "description": "上传图纸：凸轮轮廓图.dwg",
+        "operator": "系统",
+        "createdAt": "2026-06-15T15:30:00.000Z"
+      },
+      {
+        "id": "logz3kav3wp8ni",
+        "type": "dispatch",
+        "title": "供应商接单",
+        "description": "精工机械加工中心 接收订单",
+        "operator": "精工机械加工中心",
+        "createdAt": "2026-06-15T17:00:00.000Z"
+      },
+      {
+        "id": "logfcf7w5t9c8",
+        "type": "process_complete",
+        "title": "加工完成",
+        "description": "供应商完成生产加工",
+        "operator": "精工机械加工中心",
+        "createdAt": "2026-06-17T15:00:00.000Z"
+      },
+      {
+        "id": "logeq0kc3hzgg",
+        "type": "inspect_pass",
+        "title": "质检通过",
+        "description": "订单质检合格，已完成入库",
+        "operator": "质检员",
+        "createdAt": "2026-06-17T17:00:00.000Z"
+      }
+    ]
   },
   {
     "id": "o014",
@@ -446,7 +794,33 @@
     "status": "processing",
     "remark": "灰铸铁HT250",
     "createdAt": "2026-06-25T09:00:00Z",
-    "updatedAt": "2026-06-28T14:10:00Z"
+    "updatedAt": "2026-06-28T14:10:00Z",
+    "operationLogs": [
+      {
+        "id": "log67mgwrmzaok",
+        "type": "create",
+        "title": "订单创建",
+        "description": "技术部创建订单 WX202606014",
+        "operator": "系统",
+        "createdAt": "2026-06-25T09:00:00.000Z"
+      },
+      {
+        "id": "log5f2dt6cc57n",
+        "type": "drawing_upload",
+        "title": "图纸上传",
+        "description": "上传图纸：机座铸件图.pdf",
+        "operator": "系统",
+        "createdAt": "2026-06-25T09:30:00.000Z"
+      },
+      {
+        "id": "log7egocfjidie",
+        "type": "dispatch",
+        "title": "供应商接单",
+        "description": "华盛精密机械有限公司 接收订单",
+        "operator": "华盛精密机械有限公司",
+        "createdAt": "2026-06-25T11:00:00.000Z"
+      }
+    ]
   },
   {
     "id": "o015",
@@ -473,7 +847,49 @@
     "status": "completed",
     "remark": "锡青铜材质",
     "createdAt": "2026-05-20T16:30:00.000Z",
-    "updatedAt": "2026-05-15T09:30:00.000Z"
+    "updatedAt": "2026-05-15T09:30:00.000Z",
+    "operationLogs": [
+      {
+        "id": "logb4thymhmt87",
+        "type": "create",
+        "title": "订单创建",
+        "description": "技术部创建订单 WX202606015",
+        "operator": "系统",
+        "createdAt": "2026-05-20T16:30:00.000Z"
+      },
+      {
+        "id": "logh09p69xwdwl",
+        "type": "drawing_upload",
+        "title": "图纸上传",
+        "description": "上传图纸：衬套零件图.pdf",
+        "operator": "系统",
+        "createdAt": "2026-05-20T17:00:00.000Z"
+      },
+      {
+        "id": "logyj9xa6yniif",
+        "type": "dispatch",
+        "title": "供应商接单",
+        "description": "顺达五金制品厂 接收订单",
+        "operator": "顺达五金制品厂",
+        "createdAt": "2026-05-20T18:30:00.000Z"
+      },
+      {
+        "id": "log7s2oxsmzip",
+        "type": "process_complete",
+        "title": "加工完成",
+        "description": "供应商完成生产加工",
+        "operator": "顺达五金制品厂",
+        "createdAt": "2026-05-22T16:30:00.000Z"
+      },
+      {
+        "id": "log6ve30a8ejz9",
+        "type": "inspect_pass",
+        "title": "质检通过",
+        "description": "订单质检合格，已完成入库",
+        "operator": "质检员",
+        "createdAt": "2026-05-22T18:30:00.000Z"
+      }
+    ]
   },
   {
     "id": "o016",
@@ -496,11 +912,28 @@
         "uploadedAt": "2026-06-30T10:30:00Z"
       }
     ],
-    "status": "completed",
+    "status": "pending",
     "remark": "不锈钢钣金焊接",
     "createdAt": "2026-06-30T10:00:00Z",
-    "updatedAt": "2026-06-20T21:24:26.659Z",
-    "actualDeliveryDate": "2026-06-20"
+    "updatedAt": "2026-06-30T10:00:00Z",
+    "operationLogs": [
+      {
+        "id": "log7d5l0wtflou",
+        "type": "create",
+        "title": "订单创建",
+        "description": "技术部创建订单 WX202606016",
+        "operator": "系统",
+        "createdAt": "2026-06-30T10:00:00.000Z"
+      },
+      {
+        "id": "log2lcf9gv7yse",
+        "type": "drawing_upload",
+        "title": "图纸上传",
+        "description": "上传图纸：防护罩钣金图.dwg",
+        "operator": "系统",
+        "createdAt": "2026-06-30T10:30:00.000Z"
+      }
+    ]
   },
   {
     "id": "o017",
@@ -527,7 +960,49 @@
     "status": "completed",
     "remark": "模数2，45钢",
     "createdAt": "2026-06-18T08:00:00.000Z",
-    "updatedAt": "2026-06-10T14:20:00.000Z"
+    "updatedAt": "2026-06-10T14:20:00.000Z",
+    "operationLogs": [
+      {
+        "id": "loghhhw0v76f75",
+        "type": "create",
+        "title": "订单创建",
+        "description": "技术部创建订单 WX202606017",
+        "operator": "系统",
+        "createdAt": "2026-06-18T08:00:00.000Z"
+      },
+      {
+        "id": "logjgp97oxip9a",
+        "type": "drawing_upload",
+        "title": "图纸上传",
+        "description": "上传图纸：圆柱齿轮图.pdf",
+        "operator": "系统",
+        "createdAt": "2026-06-18T08:30:00.000Z"
+      },
+      {
+        "id": "logv80sg2ammih",
+        "type": "dispatch",
+        "title": "供应商接单",
+        "description": "宏达精密零部件有限公司 接收订单",
+        "operator": "宏达精密零部件有限公司",
+        "createdAt": "2026-06-18T10:00:00.000Z"
+      },
+      {
+        "id": "logblu564ewu2",
+        "type": "process_complete",
+        "title": "加工完成",
+        "description": "供应商完成生产加工",
+        "operator": "宏达精密零部件有限公司",
+        "createdAt": "2026-06-20T08:00:00.000Z"
+      },
+      {
+        "id": "log9m205obaojq",
+        "type": "inspect_pass",
+        "title": "质检通过",
+        "description": "订单质检合格，已完成入库",
+        "operator": "质检员",
+        "createdAt": "2026-06-20T10:00:00.000Z"
+      }
+    ]
   },
   {
     "id": "o018",
@@ -554,7 +1029,49 @@
     "status": "completed",
     "remark": "标准平键45钢",
     "createdAt": "2026-05-22T13:00:00.000Z",
-    "updatedAt": "2026-05-05T08:45:00.000Z"
+    "updatedAt": "2026-05-05T08:45:00.000Z",
+    "operationLogs": [
+      {
+        "id": "lognqok2wipdaj",
+        "type": "create",
+        "title": "订单创建",
+        "description": "技术部创建订单 WX202606018",
+        "operator": "系统",
+        "createdAt": "2026-05-22T13:00:00.000Z"
+      },
+      {
+        "id": "logx33g9j5dose",
+        "type": "drawing_upload",
+        "title": "图纸上传",
+        "description": "上传图纸：平键规格图.pdf",
+        "operator": "系统",
+        "createdAt": "2026-05-22T13:30:00.000Z"
+      },
+      {
+        "id": "log9s1r05hmn9j",
+        "type": "dispatch",
+        "title": "供应商接单",
+        "description": "华盛精密机械有限公司 接收订单",
+        "operator": "华盛精密机械有限公司",
+        "createdAt": "2026-05-22T15:00:00.000Z"
+      },
+      {
+        "id": "log05wrz63yrt6l",
+        "type": "process_complete",
+        "title": "加工完成",
+        "description": "供应商完成生产加工",
+        "operator": "华盛精密机械有限公司",
+        "createdAt": "2026-05-24T13:00:00.000Z"
+      },
+      {
+        "id": "logkuqvr1bhuzh",
+        "type": "inspect_pass",
+        "title": "质检通过",
+        "description": "订单质检合格，已完成入库",
+        "operator": "质检员",
+        "createdAt": "2026-05-24T15:00:00.000Z"
+      }
+    ]
   },
   {
     "id": "o019",
@@ -580,7 +1097,33 @@
     "status": "processing",
     "remark": "球墨铸铁QT450",
     "createdAt": "2026-06-25T15:00:00Z",
-    "updatedAt": "2026-06-28T09:45:00Z"
+    "updatedAt": "2026-06-28T09:45:00Z",
+    "operationLogs": [
+      {
+        "id": "logfn7vgut8nu",
+        "type": "create",
+        "title": "订单创建",
+        "description": "技术部创建订单 WX202606019",
+        "operator": "系统",
+        "createdAt": "2026-06-25T15:00:00.000Z"
+      },
+      {
+        "id": "logee6odamw4c",
+        "type": "drawing_upload",
+        "title": "图纸上传",
+        "description": "上传图纸：阀体铸件图.dwg",
+        "operator": "系统",
+        "createdAt": "2026-06-25T15:30:00.000Z"
+      },
+      {
+        "id": "log3nqkzb07oze",
+        "type": "dispatch",
+        "title": "供应商接单",
+        "description": "顺达五金制品厂 接收订单",
+        "operator": "顺达五金制品厂",
+        "createdAt": "2026-06-25T17:00:00.000Z"
+      }
+    ]
   },
   {
     "id": "o020",
@@ -603,10 +1146,43 @@
         "uploadedAt": "2026-06-28T11:20:00Z"
       }
     ],
-    "status": "completed",
+    "status": "inspecting",
     "remark": "铝合金压铸",
     "createdAt": "2026-06-28T11:00:00Z",
-    "updatedAt": "2026-06-20T21:25:37.464Z",
-    "actualDeliveryDate": "2026-06-20"
+    "updatedAt": "2026-06-28T14:00:00Z",
+    "operationLogs": [
+      {
+        "id": "logr63po366shp",
+        "type": "create",
+        "title": "订单创建",
+        "description": "技术部创建订单 WX202606020",
+        "operator": "系统",
+        "createdAt": "2026-06-28T11:00:00.000Z"
+      },
+      {
+        "id": "logt5t25d2soui",
+        "type": "drawing_upload",
+        "title": "图纸上传",
+        "description": "上传图纸：活塞零件图.pdf",
+        "operator": "系统",
+        "createdAt": "2026-06-28T11:30:00.000Z"
+      },
+      {
+        "id": "log7kr9cd56xay",
+        "type": "dispatch",
+        "title": "供应商接单",
+        "description": "精工机械加工中心 接收订单",
+        "operator": "精工机械加工中心",
+        "createdAt": "2026-06-28T13:00:00.000Z"
+      },
+      {
+        "id": "logkimijxhw4ul",
+        "type": "process_complete",
+        "title": "加工完成",
+        "description": "供应商完成生产加工",
+        "operator": "精工机械加工中心",
+        "createdAt": "2026-06-30T11:00:00.000Z"
+      }
+    ]
   }
 ]

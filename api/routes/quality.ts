@@ -61,6 +61,17 @@ router.get('/stats/trends', async (req: Request, res: Response): Promise<void> =
     const records = await readDataFile<QualityInspection[]>('quality.json');
     const completedRecords = records.filter(r => r.qualifiedQuantity > 0);
     
+    const getLatestByOrder = (records: QualityInspection[]) => {
+      const map = new Map<string, QualityInspection>();
+      records.forEach(r => {
+        const existing = map.get(r.orderId);
+        if (!existing || new Date(r.inspectedAt) > new Date(existing.inspectedAt)) {
+          map.set(r.orderId, r);
+        }
+      });
+      return Array.from(map.values());
+    };
+    
     const trends: QualityTrendPoint[] = [];
     const today = new Date();
     
@@ -69,9 +80,10 @@ router.get('/stats/trends', async (req: Request, res: Response): Promise<void> =
       date.setDate(date.getDate() - i);
       const dateStr = date.toISOString().split('T')[0];
       
-      const dayRecords = completedRecords.filter(r => 
+      const dayAllRecords = completedRecords.filter(r => 
         r.inspectedAt.split('T')[0] === dateStr
       );
+      const dayRecords = getLatestByOrder(dayAllRecords);
       
       const totalQualified = dayRecords.reduce((sum, r) => sum + r.qualifiedQuantity, 0);
       const totalDefects = dayRecords.reduce((sum, r) => sum + r.unqualifiedQuantity, 0);
@@ -192,6 +204,9 @@ router.post('/', async (req: Request, res: Response): Promise<void> => {
       ? parseFloat(((qualifiedQuantity / total) * 100).toFixed(2)) 
       : 0;
     
+    const orderRecords = records.filter(r => r.orderId === req.body.orderId);
+    const inspectionRound = orderRecords.length + 1;
+    
     const newRecord: QualityInspection = {
       id: generateId('q'),
       orderId: req.body.orderId,
@@ -203,21 +218,19 @@ router.post('/', async (req: Request, res: Response): Promise<void> => {
       defects: req.body.defects || [],
       remark: req.body.remark || '',
       inspectedAt: new Date().toISOString(),
+      inspectionRound,
     };
     
-    const existingIndex = records.findIndex(r => r.orderId === req.body.orderId);
-    if (existingIndex >= 0) {
-      records[existingIndex] = newRecord;
-    } else {
-      records.unshift(newRecord);
-    }
+    records.unshift(newRecord);
     
     await writeDataFile('quality.json', records);
     
     const orderIndex = orders.findIndex(o => o.id === req.body.orderId);
     if (orderIndex >= 0) {
-      orders[orderIndex].status = 'completed';
-      orders[orderIndex].actualDeliveryDate = new Date().toISOString().split('T')[0];
+      if (unqualifiedQuantity === 0) {
+        orders[orderIndex].status = 'completed';
+        orders[orderIndex].actualDeliveryDate = new Date().toISOString().split('T')[0];
+      }
       orders[orderIndex].updatedAt = new Date().toISOString();
       await writeDataFile('orders.json', orders);
     }

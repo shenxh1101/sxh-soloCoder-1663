@@ -20,6 +20,17 @@ export interface DrawingFile {
   uploadedAt: string;
 }
 
+export type OperationType = 'create' | 'dispatch' | 'process_complete' | 'inspect_submit' | 'inspect_pass' | 'reject' | 'reinspect' | 'drawing_upload' | 'drawing_delete';
+
+export interface OperationLog {
+  id: string;
+  type: OperationType;
+  title: string;
+  description: string;
+  operator: string;
+  createdAt: string;
+}
+
 export type OrderStatus = 'pending' | 'processing' | 'inspecting' | 'completed' | 'rejected';
 
 export interface Order {
@@ -37,6 +48,7 @@ export interface Order {
   drawings: DrawingFile[];
   status: OrderStatus;
   remark: string;
+  operationLogs: OperationLog[];
   createdAt: string;
   updatedAt: string;
 }
@@ -59,6 +71,7 @@ export interface QualityInspection {
   defects: DefectRecord[];
   remark: string;
   inspectedAt: string;
+  inspectionRound: number;
 }
 
 export interface DefectType {

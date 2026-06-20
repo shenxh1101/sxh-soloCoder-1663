@@ -54,7 +54,7 @@ export const orderApi = {
 
   getDetail: (id: string) => request<Order>(`/orders/${id}`),
 
-  create: (data: Partial<Order>) =>
+  create: (data: Partial<Order> & { drawings?: Array<{ name: string; type: string; size: number; data: string }> }) =>
     request<Order>('/orders', {
       method: 'POST',
       body: JSON.stringify(data),
@@ -70,6 +70,17 @@ export const orderApi = {
     request<Order>(`/orders/${id}/status`, {
       method: 'PATCH',
       body: JSON.stringify({ status, actualDeliveryDate }),
+    }),
+
+  deleteDrawing: (orderId: string, drawingId: string) =>
+    request<Order>(`/orders/${orderId}/drawings/${drawingId}`, {
+      method: 'DELETE',
+    }),
+
+  uploadDrawings: (orderId: string, drawings: Array<{ name: string; type: string; size: number; data: string }>) =>
+    request<Order>(`/orders/${orderId}/drawings`, {
+      method: 'POST',
+      body: JSON.stringify({ drawings }),
     }),
 
   remove: (id: string) =>
@@ -106,6 +117,23 @@ export const supplierApi = {
   getPerformance: (month?: string) => {
     const query = month ? `?month=${month}` : '';
     return request<SupplierPerformance[]>(`/suppliers/performance${query}`);
+  },
+
+  getPerformanceRange: (startMonth: string, endMonth: string) => {
+    return request<{ months: string[]; suppliers: Array<{
+      supplierId: string;
+      supplierName: string;
+      totalOrders: number;
+      avgPassRate: number;
+      avgOnTimeRate: number;
+      score: number;
+      monthlyData: Array<{
+        month: string;
+        totalOrders: number;
+        passRate: number;
+        onTimeDeliveryRate: number;
+      }>;
+    }> }>(`/suppliers/performance/range?startMonth=${startMonth}&endMonth=${endMonth}`);
   },
 };
 
@@ -160,5 +188,9 @@ export const exportApi = {
   exportSupplierRanking: (month?: string) => {
     const query = month ? `?month=${month}` : '';
     window.open(`/api/export/suppliers/ranking${query}`, '_blank');
+  },
+
+  exportSupplierRankingRange: (startMonth: string, endMonth: string) => {
+    window.open(`/api/export/suppliers/ranking-range?startMonth=${startMonth}&endMonth=${endMonth}`, '_blank');
   },
 };

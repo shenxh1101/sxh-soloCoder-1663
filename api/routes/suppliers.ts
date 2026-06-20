@@ -52,6 +52,17 @@ router.get('/performance', async (req: Request, res: Response): Promise<void> =>
       return year === targetYear && monthNum === targetMonthNum;
     };
     
+    const getLatestInspectionsByOrder = (records: QualityInspection[]) => {
+      const map = new Map<string, QualityInspection>();
+      records.forEach(r => {
+        const existing = map.get(r.orderId);
+        if (!existing || new Date(r.inspectedAt) > new Date(existing.inspectedAt)) {
+          map.set(r.orderId, r);
+        }
+      });
+      return Array.from(map.values());
+    };
+    
     const performances: SupplierPerformance[] = suppliers
       .filter(s => s.status === 'active')
       .map(supplier => {
@@ -61,11 +72,12 @@ router.get('/performance', async (req: Request, res: Response): Promise<void> =>
         );
         const totalQuantity = monthCompletedOrders.reduce((sum, o) => sum + o.quantity, 0);
         
-        const monthInspections = qualityRecords.filter(
+        const monthAllInspections = qualityRecords.filter(
           q => supplierOrders.some(o => o.id === q.orderId) 
             && q.qualifiedQuantity > 0 
             && isInMonth(q.inspectedAt)
         );
+        const monthInspections = getLatestInspectionsByOrder(monthAllInspections);
         
         const totalQualified = monthInspections.reduce((sum, q) => sum + q.qualifiedQuantity, 0);
         const totalInspected = monthInspections.reduce(
@@ -122,6 +134,136 @@ router.get('/performance', async (req: Request, res: Response): Promise<void> =>
   } catch (error) {
     console.error('Performance error:', error);
     res.status(500).json({ success: false, error: 'Failed to fetch performance data' });
+  }
+});
+
+router.get('/performance/range', async (req: Request, res: Response): Promise<void> => {
+  try {
+    const { startMonth, endMonth } = req.query;
+    const start = (startMonth as string) || '2026-04';
+    const end = (endMonth as string) || '2026-06';
+    
+    const suppliers = await readDataFile<Supplier[]>('suppliers.json');
+    const orders = await readDataFile<Order[]>('orders.json');
+    const qualityRecords = await readDataFile<QualityInspection[]>('quality.json');
+    
+    const getMonthList = (start: string, end: string) => {
+      const months: string[] = [];
+      const [startYear, startMonthNum] = start.split('-').map(Number);
+      const [endYear, endMonthNum] = end.split('-').map(Number);
+      
+      let currentYear = startYear;
+      let currentMonth = startMonthNum;
+      
+      while (currentYear < endYear || (currentYear === endYear && currentMonth <= endMonthNum)) {
+        months.push(`${currentYear}-${String(currentMonth).padStart(2, '0')}`);
+        if (currentMonth === 12) {
+          currentYear++;
+          currentMonth = 1;
+        } else {
+          currentMonth++;
+        }
+      }
+      
+      return months;
+    };
+    
+    const monthList = getMonthList(start, end);
+    
+    const getLatestInspectionsByOrder = (records: QualityInspection[]) => {
+      const map = new Map<string, QualityInspection>();
+      records.forEach(r => {
+        const existing = map.get(r.orderId);
+        if (!existing || new Date(r.inspectedAt) > new Date(existing.inspectedAt)) {
+          map.set(r.orderId, r);
+        }
+      });
+      return Array.from(map.values());
+    };
+    
+    const activeSuppliers = suppliers.filter(s => s.status === 'active');
+    
+    const result = activeSuppliers.map(supplier => {
+      const supplierOrders = orders.filter(o => o.supplierId === supplier.id);
+      
+      const monthlyData = monthList.map(month => {
+        const [targetYear, targetMonthNum] = month.split('-').map(Number);
+        
+        const isInMonth = (dateStr: string) => {
+          if (!dateStr) return false;
+          const date = new Date(dateStr);
+          return date.getFullYear() === targetYear && (date.getMonth() + 1) === targetMonthNum;
+        };
+        
+        const monthCompletedOrders = supplierOrders.filter(o => 
+          o.status === 'completed' && o.actualDeliveryDate && isInMonth(o.actualDeliveryDate)
+        );
+        
+        const monthAllInspections = qualityRecords.filter(
+          q => supplierOrders.some(o => o.id === q.orderId) 
+            && q.qualifiedQuantity > 0 
+            && isInMonth(q.inspectedAt)
+        );
+        const monthInspections = getLatestInspectionsByOrder(monthAllInspections);
+        
+        const totalQualified = monthInspections.reduce((sum, q) => sum + q.qualifiedQuantity, 0);
+        const totalInspected = monthInspections.reduce(
+          (sum, q) => sum + q.qualifiedQuantity + q.unqualifiedQuantity,
+          0
+        );
+        const passRate = totalInspected > 0 
+          ? parseFloat(((totalQualified / totalInspected) * 100).toFixed(2)) 
+          : 0;
+        
+        const onTimeCount = monthCompletedOrders.filter(o => {
+          if (!o.actualDeliveryDate) return false;
+          return new Date(o.actualDeliveryDate) <= new Date(o.deliveryDate);
+        }).length;
+        
+        const onTimeDeliveryRate = monthCompletedOrders.length > 0
+          ? parseFloat(((onTimeCount / monthCompletedOrders.length) * 100).toFixed(2))
+          : 0;
+        
+        return {
+          month,
+          totalOrders: monthCompletedOrders.length,
+          passRate,
+          onTimeDeliveryRate,
+        };
+      });
+      
+      const totalOrders = monthlyData.reduce((sum, m) => sum + m.totalOrders, 0);
+      const avgPassRate = monthlyData.length > 0
+        ? parseFloat((monthlyData.reduce((sum, m) => sum + m.passRate, 0) / monthlyData.length).toFixed(2))
+        : 0;
+      const avgOnTimeRate = monthlyData.length > 0
+        ? parseFloat((monthlyData.reduce((sum, m) => sum + m.onTimeDeliveryRate, 0) / monthlyData.length).toFixed(2))
+        : 0;
+      const score = parseFloat((avgPassRate * 0.6 + avgOnTimeRate * 0.4).toFixed(2));
+      
+      return {
+        supplierId: supplier.id,
+        supplierName: supplier.name,
+        totalOrders,
+        avgPassRate,
+        avgOnTimeRate,
+        score,
+        monthlyData,
+      };
+    });
+    
+    result.sort((a, b) => b.score - a.score);
+    
+    res.json({ 
+      success: true, 
+      data: {
+        months: monthList,
+        suppliers: result,
+      }
+    });
+  } catch (error) {
+    console.error('Performance range error:', error);
+    res.status(500).json({ success: false, error: 'Failed to fetch performance range data' });
   }
 });
 
