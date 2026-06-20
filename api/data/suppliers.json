@@ -1,0 +1,62 @@
+[
+  {
+    "id": "s001",
+    "name": "华盛精密机械有限公司",
+    "contactPerson": "张经理",
+    "phone": "13800138001",
+    "email": "zhang@huasheng.com",
+    "address": "江苏省苏州市工业园区机电路88号",
+    "rating": 4.8,
+    "status": "active",
+    "cooperationDate": "2022-03-15",
+    "remark": "长期合作伙伴，加工精度高，交期稳定"
+  },
+  {
+    "id": "s002",
+    "name": "顺达五金制品厂",
+    "contactPerson": "李厂长",
+    "phone": "13800138002",
+    "email": "li@shunda.com",
+    "address": "广东省东莞市长安镇振安路256号",
+    "rating": 4.5,
+    "status": "active",
+    "cooperationDate": "2023-01-20",
+    "remark": "价格合理，批量交付能力强"
+  },
+  {
+    "id": "s003",
+    "name": "精工机械加工中心",
+    "contactPerson": "王工",
+    "phone": "13800138003",
+    "email": "wang@jinggong.com",
+    "address": "浙江省宁波市鄞州区科技园区创新路128号",
+    "rating": 4.2,
+    "status": "active",
+    "cooperationDate": "2023-06-10",
+    "remark": "擅长复杂零件加工，需要加强质量管控"
+  },
+  {
+    "id": "s004",
+    "name": "宏达精密零部件有限公司",
+    "contactPerson": "赵总",
+    "phone": "13800138004",
+    "email": "zhao@hongda.com",
+    "address": "上海市浦东新区张江高科技园区碧波路66号",
+    "rating": 4.9,
+    "status": "active",
+    "cooperationDate": "2021-11-05",
+    "remark": "五星级供应商，质量和交期都很优秀"
+  },
+  {
+    "id": "s005",
+    "name": "鑫源机械厂",
+    "contactPerson": "孙主任",
+    "phone": "13800138005",
+    "email": "sun@xinyuan.com",
+    "address": "山东省青岛市城阳区金岭工业园6栋",
+    "rating": 3.8,
+    "status": "inactive",
+    "cooperationDate": "2024-02-18",
+    "remark": "新合作供应商，质量有待提高，暂停合作"
+  }
+]

@@ -1,0 +1,214 @@
+[
+  {
+    "id": "q001",
+    "orderId": "o001",
+    "orderNo": "WX202606001",
+    "inspector": "刘质检",
+    "qualifiedQuantity": 492,
+    "unqualifiedQuantity": 8,
+    "passRate": 98.4,
+    "defects": [
+      {
+        "id": "def001",
+        "type": "尺寸超差",
+        "description": "内孔直径偏小0.02mm",
+        "quantity": 5
+      },
+      {
+        "id": "def002",
+        "type": "外观瑕疵",
+        "description": "表面有轻微划痕",
+        "quantity": 3
+      }
+    ],
+    "remark": "整体质量良好，少量尺寸偏差在可接受范围",
+    "inspectedAt": "2026-07-13T09:30:00Z"
+  },
+  {
+    "id": "q002",
+    "orderId": "o005",
+    "orderNo": "WX202606005",
+    "inspector": "王质检",
+    "qualifiedQuantity": 298,
+    "unqualifiedQuantity": 2,
+    "passRate": 99.33,
+    "defects": [
+      {
+        "id": "def003",
+        "type": "表面粗糙度",
+        "description": "端面粗糙度不达标",
+        "quantity": 2
+      }
+    ],
+    "remark": "质量优秀",
+    "inspectedAt": "2026-07-04T14:20:00Z"
+  },
+  {
+    "id": "q003",
+    "orderId": "o007",
+    "orderNo": "WX202606007",
+    "inspector": "刘质检",
+    "qualifiedQuantity": 765,
+    "unqualifiedQuantity": 35,
+    "passRate": 95.63,
+    "defects": [
+      {
+        "id": "def004",
+        "type": "外观瑕疵",
+        "description": "表面喷漆不均匀",
+        "quantity": 20
+      },
+      {
+        "id": "def005",
+        "type": "尺寸超差",
+        "description": "安装孔位偏移",
+        "quantity": 15
+      }
+    ],
+    "remark": "外观质量问题较多，需加强管控",
+    "inspectedAt": "2026-07-03T10:15:00Z"
+  },
+  {
+    "id": "q004",
+    "orderId": "o009",
+    "orderNo": "WX202606009",
+    "inspector": "陈质检",
+    "qualifiedQuantity": 197,
+    "unqualifiedQuantity": 3,
+    "passRate": 98.5,
+    "defects": [
+      {
+        "id": "def006",
+        "type": "外观瑕疵",
+        "description": "焊缝处有焊渣未清理",
+        "quantity": 3
+      }
+    ],
+    "remark": "整体合格，外观需改善",
+    "inspectedAt": "2026-07-11T15:45:00Z"
+  },
+  {
+    "id": "q005",
+    "orderId": "o013",
+    "orderNo": "WX202606013",
+    "inspector": "王质检",
+    "qualifiedQuantity": 112,
+    "unqualifiedQuantity": 8,
+    "passRate": 93.33,
+    "defects": [
+      {
+        "id": "def007",
+        "type": "形位公差",
+        "description": "凸轮轮廓度超差",
+        "quantity": 5
+      },
+      {
+        "id": "def008",
+        "type": "硬度不够",
+        "description": "表面硬度偏低",
+        "quantity": 3
+      }
+    ],
+    "remark": "形位公差问题需重点关注",
+    "inspectedAt": "2026-07-08T11:30:00Z"
+  },
+  {
+    "id": "q006",
+    "orderId": "o015",
+    "orderNo": "WX202606015",
+    "inspector": "刘质检",
+    "qualifiedQuantity": 1485,
+    "unqualifiedQuantity": 15,
+    "passRate": 99.0,
+    "defects": [
+      {
+        "id": "def009",
+        "type": "表面粗糙度",
+        "description": "内孔表面光洁度不够",
+        "quantity": 10
+      },
+      {
+        "id": "def010",
+        "type": "尺寸超差",
+        "description": "外径偏大",
+        "quantity": 5
+      }
+    ],
+    "remark": "批量质量稳定",
+    "inspectedAt": "2026-07-15T10:00:00Z"
+  },
+  {
+    "id": "q007",
+    "orderId": "o017",
+    "orderNo": "WX202606017",
+    "inspector": "陈质检",
+    "qualifiedQuantity": 296,
+    "unqualifiedQuantity": 4,
+    "passRate": 98.67,
+    "defects": [
+      {
+        "id": "def011",
+        "type": "热处理不合格",
+        "description": "齿面硬度不均",
+        "quantity": 4
+      }
+    ],
+    "remark": "热处理工艺需改进",
+    "inspectedAt": "2026-07-10T15:00:00Z"
+  },
+  {
+    "id": "q008",
+    "orderId": "o018",
+    "orderNo": "WX202606018",
+    "inspector": "王质检",
+    "qualifiedQuantity": 1995,
+    "unqualifiedQuantity": 5,
+    "passRate": 99.75,
+    "defects": [
+      {
+        "id": "def012",
+        "type": "尺寸超差",
+        "description": "键宽偏差",
+        "quantity": 5
+      }
+    ],
+    "remark": "质量非常好",
+    "inspectedAt": "2026-07-05T09:15:00Z"
+  },
+  {
+    "id": "q009",
+    "orderId": "o003",
+    "orderNo": "WX202606003",
+    "inspector": "陈质检",
+    "qualifiedQuantity": 0,
+    "unqualifiedQuantity": 0,
+    "passRate": 0,
+    "defects": [],
+    "remark": "",
+    "inspectedAt": "2026-07-08T16:30:00Z"
+  },
+  {
+    "id": "q010",
+    "orderId": "o011",
+    "orderNo": "WX202606011",
+    "inspector": "刘质检",
+    "qualifiedQuantity": 0,
+    "unqualifiedQuantity": 0,
+    "passRate": 0,
+    "defects": [],
+    "remark": "",
+    "inspectedAt": "2026-06-28T09:15:00Z"
+  },
+  {
+    "id": "q011",
+    "orderId": "o020",
+    "orderNo": "WX202606020",
+    "inspector": "王质检",
+    "qualifiedQuantity": 0,
+    "unqualifiedQuantity": 0,
+    "passRate": 0,
+    "defects": [],
+    "remark": "",
+    "inspectedAt": "2026-07-14T16:30:00Z"
+  }
+]

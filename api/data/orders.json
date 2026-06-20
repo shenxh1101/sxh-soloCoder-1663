@@ -1,0 +1,532 @@
+[
+  {
+    "id": "o001",
+    "orderNo": "WX202606001",
+    "partName": "法兰盘",
+    "partNo": "FL-001-A",
+    "quantity": 500,
+    "unitPrice": 85.5,
+    "totalPrice": 42750,
+    "deliveryDate": "2026-07-15",
+    "actualDeliveryDate": "2026-07-12",
+    "supplierId": "s001",
+    "supplierName": "华盛精密机械有限公司",
+    "drawings": [
+      {
+        "id": "dr001",
+        "name": "法兰盘图纸_A版.pdf",
+        "type": "application/pdf",
+        "size": 2456789,
+        "url": "/drawings/flange.pdf",
+        "uploadedAt": "2026-06-10T09:30:00Z"
+      }
+    ],
+    "status": "completed",
+    "remark": "需要表面发黑处理",
+    "createdAt": "2026-06-10T09:00:00Z",
+    "updatedAt": "2026-07-13T14:20:00Z"
+  },
+  {
+    "id": "o002",
+    "orderNo": "WX202606002",
+    "partName": "轴承座",
+    "partNo": "ZC-023-B",
+    "quantity": 200,
+    "unitPrice": 156.0,
+    "totalPrice": 31200,
+    "deliveryDate": "2026-07-20",
+    "supplierId": "s002",
+    "supplierName": "顺达五金制品厂",
+    "drawings": [
+      {
+        "id": "dr002",
+        "name": "轴承座装配图.dwg",
+        "type": "image/vnd.dwg",
+        "size": 1876543,
+        "url": "/drawings/bearing.dwg",
+        "uploadedAt": "2026-06-12T11:15:00Z"
+      }
+    ],
+    "status": "processing",
+    "remark": "需严格保证同轴度",
+    "createdAt": "2026-06-12T10:30:00Z",
+    "updatedAt": "2026-06-15T08:45:00Z"
+  },
+  {
+    "id": "o003",
+    "orderNo": "WX202606003",
+    "partName": "齿轮轴",
+    "partNo": "CL-015-C",
+    "quantity": 100,
+    "unitPrice": 320.0,
+    "totalPrice": 32000,
+    "deliveryDate": "2026-07-10",
+    "actualDeliveryDate": "2026-07-08",
+    "supplierId": "s004",
+    "supplierName": "宏达精密零部件有限公司",
+    "drawings": [
+      {
+        "id": "dr003",
+        "name": "齿轮轴零件图.pdf",
+        "type": "application/pdf",
+        "size": 3123456,
+        "url": "/drawings/gear-shaft.pdf",
+        "uploadedAt": "2026-06-08T14:20:00Z"
+      }
+    ],
+    "status": "inspecting",
+    "remark": "材料45#钢，调质处理",
+    "createdAt": "2026-06-08T14:00:00Z",
+    "updatedAt": "2026-07-08T16:30:00Z"
+  },
+  {
+    "id": "o004",
+    "orderNo": "WX202606004",
+    "partName": "支撑板",
+    "partNo": "ZC-056-D",
+    "quantity": 1000,
+    "unitPrice": 45.0,
+    "totalPrice": 45000,
+    "deliveryDate": "2026-07-25",
+    "supplierId": "s003",
+    "supplierName": "精工机械加工中心",
+    "drawings": [
+      {
+        "id": "dr004",
+        "name": "支撑板下料图.pdf",
+        "type": "application/pdf",
+        "size": 987654,
+        "url": "/drawings/support-plate.pdf",
+        "uploadedAt": "2026-06-15T08:50:00Z"
+      }
+    ],
+    "status": "pending",
+    "remark": "需做去毛刺处理",
+    "createdAt": "2026-06-15T08:30:00Z",
+    "updatedAt": "2026-06-15T08:30:00Z"
+  },
+  {
+    "id": "o005",
+    "orderNo": "WX202606005",
+    "partName": "连接法兰",
+    "partNo": "FL-008-E",
+    "quantity": 300,
+    "unitPrice": 128.0,
+    "totalPrice": 38400,
+    "deliveryDate": "2026-07-05",
+    "actualDeliveryDate": "2026-07-03",
+    "supplierId": "s001",
+    "supplierName": "华盛精密机械有限公司",
+    "drawings": [
+      {
+        "id": "dr005",
+        "name": "连接法兰图.dwg",
+        "type": "image/vnd.dwg",
+        "size": 1456789,
+        "url": "/drawings/connect-flange.dwg",
+        "uploadedAt": "2026-06-05T10:00:00Z"
+      }
+    ],
+    "status": "completed",
+    "remark": "不锈钢304材质",
+    "createdAt": "2026-06-05T09:30:00Z",
+    "updatedAt": "2026-07-04T11:20:00Z"
+  },
+  {
+    "id": "o006",
+    "orderNo": "WX202606006",
+    "partName": "导向轴",
+    "partNo": "DX-003-A",
+    "quantity": 150,
+    "unitPrice": 185.0,
+    "totalPrice": 27750,
+    "deliveryDate": "2026-07-18",
+    "supplierId": "s004",
+    "supplierName": "宏达精密零部件有限公司",
+    "drawings": [
+      {
+        "id": "dr006",
+        "name": "导向轴零件图.pdf",
+        "type": "application/pdf",
+        "size": 2234567,
+        "url": "/drawings/guide-shaft.pdf",
+        "uploadedAt": "2026-06-18T13:45:00Z"
+      }
+    ],
+    "status": "processing",
+    "remark": "表面高频淬火HRC58-62",
+    "createdAt": "2026-06-18T13:30:00Z",
+    "updatedAt": "2026-06-20T09:15:00Z"
+  },
+  {
+    "id": "o007",
+    "orderNo": "WX202606007",
+    "partName": "压盖",
+    "partNo": "YG-012-B",
+    "quantity": 800,
+    "unitPrice": 32.5,
+    "totalPrice": 26000,
+    "deliveryDate": "2026-06-30",
+    "actualDeliveryDate": "2026-07-02",
+    "supplierId": "s002",
+    "supplierName": "顺达五金制品厂",
+    "drawings": [
+      {
+        "id": "dr007",
+        "name": "压盖图纸.pdf",
+        "type": "application/pdf",
+        "size": 765432,
+        "url": "/drawings/gland.pdf",
+        "uploadedAt": "2026-06-10T16:20:00Z"
+      }
+    ],
+    "status": "completed",
+    "remark": "铸铁件，表面喷漆",
+    "createdAt": "2026-06-10T16:00:00Z",
+    "updatedAt": "2026-07-03T10:45:00Z"
+  },
+  {
+    "id": "o008",
+    "orderNo": "WX202606008",
+    "partName": "联轴器",
+    "partNo": "LZQ-025-C",
+    "quantity": 50,
+    "unitPrice": 450.0,
+    "totalPrice": 22500,
+    "deliveryDate": "2026-07-30",
+    "supplierId": "s003",
+    "supplierName": "精工机械加工中心",
+    "drawings": [
+      {
+        "id": "dr008",
+        "name": "联轴器装配图.dwg",
+        "type": "image/vnd.dwg",
+        "size": 2876543,
+        "url": "/drawings/coupling.dwg",
+        "uploadedAt": "2026-06-20T11:30:00Z"
+      }
+    ],
+    "status": "pending",
+    "remark": "弹性联轴器，需做动平衡",
+    "createdAt": "2026-06-20T11:00:00Z",
+    "updatedAt": "2026-06-20T11:00:00Z"
+  },
+  {
+    "id": "o009",
+    "orderNo": "WX202606009",
+    "partName": "支架",
+    "partNo": "ZJ-045-D",
+    "quantity": 200,
+    "unitPrice": 210.0,
+    "totalPrice": 42000,
+    "deliveryDate": "2026-07-12",
+    "actualDeliveryDate": "2026-07-10",
+    "supplierId": "s004",
+    "supplierName": "宏达精密零部件有限公司",
+    "drawings": [
+      {
+        "id": "dr009",
+        "name": "支架焊接图.pdf",
+        "type": "application/pdf",
+        "size": 1654321,
+        "url": "/drawings/bracket.pdf",
+        "uploadedAt": "2026-06-12T09:15:00Z"
+      }
+    ],
+    "status": "completed",
+    "remark": "焊接件，需做应力消除",
+    "createdAt": "2026-06-12T09:00:00Z",
+    "updatedAt": "2026-07-11T15:30:00Z"
+  },
+  {
+    "id": "o010",
+    "orderNo": "WX202606010",
+    "partName": "螺母座",
+    "partNo": "LM-007-E",
+    "quantity": 500,
+    "unitPrice": 68.0,
+    "totalPrice": 34000,
+    "deliveryDate": "2026-07-22",
+    "supplierId": "s001",
+    "supplierName": "华盛精密机械有限公司",
+    "drawings": [
+      {
+        "id": "dr010",
+        "name": "螺母座零件图.dwg",
+        "type": "image/vnd.dwg",
+        "size": 1234567,
+        "url": "/drawings/nut-seat.dwg",
+        "uploadedAt": "2026-06-22T14:10:00Z"
+      }
+    ],
+    "status": "processing",
+    "remark": "黄铜材质",
+    "createdAt": "2026-06-22T14:00:00Z",
+    "updatedAt": "2026-06-25T08:30:00Z"
+  },
+  {
+    "id": "o011",
+    "orderNo": "WX202606011",
+    "partName": "端盖",
+    "partNo": "DG-018-A",
+    "quantity": 600,
+    "unitPrice": 38.0,
+    "totalPrice": 22800,
+    "deliveryDate": "2026-06-28",
+    "actualDeliveryDate": "2026-06-27",
+    "supplierId": "s002",
+    "supplierName": "顺达五金制品厂",
+    "drawings": [
+      {
+        "id": "dr011",
+        "name": "端盖图纸.pdf",
+        "type": "application/pdf",
+        "size": 876543,
+        "url": "/drawings/end-cap.pdf",
+        "uploadedAt": "2026-06-08T10:30:00Z"
+      }
+    ],
+    "status": "inspecting",
+    "remark": "铝合金压铸件",
+    "createdAt": "2026-06-08T10:00:00Z",
+    "updatedAt": "2026-06-28T09:15:00Z"
+  },
+  {
+    "id": "o012",
+    "orderNo": "WX202606012",
+    "partName": "丝杆",
+    "partNo": "SG-002-B",
+    "quantity": 80,
+    "unitPrice": 520.0,
+    "totalPrice": 41600,
+    "deliveryDate": "2026-07-28",
+    "supplierId": "s004",
+    "supplierName": "宏达精密零部件有限公司",
+    "drawings": [
+      {
+        "id": "dr012",
+        "name": "滚珠丝杆装配图.pdf",
+        "type": "application/pdf",
+        "size": 3456789,
+        "url": "/drawings/ball-screw.pdf",
+        "uploadedAt": "2026-06-28T11:45:00Z"
+      }
+    ],
+    "status": "pending",
+    "remark": "C7级精度",
+    "createdAt": "2026-06-28T11:30:00Z",
+    "updatedAt": "2026-06-28T11:30:00Z"
+  },
+  {
+    "id": "o013",
+    "orderNo": "WX202606013",
+    "partName": "凸轮",
+    "partNo": "TL-035-C",
+    "quantity": 120,
+    "unitPrice": 280.0,
+    "totalPrice": 33600,
+    "deliveryDate": "2026-07-08",
+    "actualDeliveryDate": "2026-07-07",
+    "supplierId": "s003",
+    "supplierName": "精工机械加工中心",
+    "drawings": [
+      {
+        "id": "dr013",
+        "name": "凸轮轮廓图.dwg",
+        "type": "image/vnd.dwg",
+        "size": 1567890,
+        "url": "/drawings/cam.dwg",
+        "uploadedAt": "2026-06-15T15:30:00Z"
+      }
+    ],
+    "status": "completed",
+    "remark": "45号钢调质",
+    "createdAt": "2026-06-15T15:00:00Z",
+    "updatedAt": "2026-07-08T10:20:00Z"
+  },
+  {
+    "id": "o014",
+    "orderNo": "WX202606014",
+    "partName": "机座",
+    "partNo": "JZ-020-D",
+    "quantity": 50,
+    "unitPrice": 850.0,
+    "totalPrice": 42500,
+    "deliveryDate": "2026-07-25",
+    "supplierId": "s001",
+    "supplierName": "华盛精密机械有限公司",
+    "drawings": [
+      {
+        "id": "dr014",
+        "name": "机座铸件图.pdf",
+        "type": "application/pdf",
+        "size": 2987654,
+        "url": "/drawings/frame.pdf",
+        "uploadedAt": "2026-06-25T09:20:00Z"
+      }
+    ],
+    "status": "processing",
+    "remark": "灰铸铁HT250",
+    "createdAt": "2026-06-25T09:00:00Z",
+    "updatedAt": "2026-06-28T14:10:00Z"
+  },
+  {
+    "id": "o015",
+    "orderNo": "WX202606015",
+    "partName": "衬套",
+    "partNo": "CT-006-E",
+    "quantity": 1500,
+    "unitPrice": 18.0,
+    "totalPrice": 27000,
+    "deliveryDate": "2026-07-15",
+    "actualDeliveryDate": "2026-07-14",
+    "supplierId": "s002",
+    "supplierName": "顺达五金制品厂",
+    "drawings": [
+      {
+        "id": "dr015",
+        "name": "衬套零件图.pdf",
+        "type": "application/pdf",
+        "size": 543210,
+        "url": "/drawings/bushing.pdf",
+        "uploadedAt": "2026-06-20T16:45:00Z"
+      }
+    ],
+    "status": "completed",
+    "remark": "锡青铜材质",
+    "createdAt": "2026-06-20T16:30:00Z",
+    "updatedAt": "2026-07-15T09:30:00Z"
+  },
+  {
+    "id": "o016",
+    "orderNo": "WX202606016",
+    "partName": "防护罩",
+    "partNo": "FH-032-A",
+    "quantity": 100,
+    "unitPrice": 165.0,
+    "totalPrice": 16500,
+    "deliveryDate": "2026-07-30",
+    "supplierId": "s003",
+    "supplierName": "精工机械加工中心",
+    "drawings": [
+      {
+        "id": "dr016",
+        "name": "防护罩钣金图.dwg",
+        "type": "image/vnd.dwg",
+        "size": 1123456,
+        "url": "/drawings/cover.dwg",
+        "uploadedAt": "2026-06-30T10:30:00Z"
+      }
+    ],
+    "status": "pending",
+    "remark": "不锈钢钣金焊接",
+    "createdAt": "2026-06-30T10:00:00Z",
+    "updatedAt": "2026-06-30T10:00:00Z"
+  },
+  {
+    "id": "o017",
+    "orderNo": "WX202606017",
+    "partName": "齿轮",
+    "partNo": "CL-042-B",
+    "quantity": 300,
+    "unitPrice": 95.0,
+    "totalPrice": 28500,
+    "deliveryDate": "2026-07-10",
+    "actualDeliveryDate": "2026-07-09",
+    "supplierId": "s004",
+    "supplierName": "宏达精密零部件有限公司",
+    "drawings": [
+      {
+        "id": "dr017",
+        "name": "圆柱齿轮图.pdf",
+        "type": "application/pdf",
+        "size": 1789012,
+        "url": "/drawings/gear.pdf",
+        "uploadedAt": "2026-06-18T08:30:00Z"
+      }
+    ],
+    "status": "completed",
+    "remark": "模数2，45钢",
+    "createdAt": "2026-06-18T08:00:00Z",
+    "updatedAt": "2026-07-10T14:20:00Z"
+  },
+  {
+    "id": "o018",
+    "orderNo": "WX202606018",
+    "partName": "键条",
+    "partNo": "JT-009-C",
+    "quantity": 2000,
+    "unitPrice": 5.5,
+    "totalPrice": 11000,
+    "deliveryDate": "2026-07-05",
+    "actualDeliveryDate": "2026-07-04",
+    "supplierId": "s001",
+    "supplierName": "华盛精密机械有限公司",
+    "drawings": [
+      {
+        "id": "dr018",
+        "name": "平键规格图.pdf",
+        "type": "application/pdf",
+        "size": 234567,
+        "url": "/drawings/key.pdf",
+        "uploadedAt": "2026-06-22T13:20:00Z"
+      }
+    ],
+    "status": "completed",
+    "remark": "标准平键45钢",
+    "createdAt": "2026-06-22T13:00:00Z",
+    "updatedAt": "2026-07-05T08:45:00Z"
+  },
+  {
+    "id": "o019",
+    "orderNo": "WX202606019",
+    "partName": "阀体",
+    "partNo": "FT-015-D",
+    "quantity": 80,
+    "unitPrice": 380.0,
+    "totalPrice": 30400,
+    "deliveryDate": "2026-07-20",
+    "supplierId": "s002",
+    "supplierName": "顺达五金制品厂",
+    "drawings": [
+      {
+        "id": "dr019",
+        "name": "阀体铸件图.dwg",
+        "type": "image/vnd.dwg",
+        "size": 2345678,
+        "url": "/drawings/valve-body.dwg",
+        "uploadedAt": "2026-06-25T15:10:00Z"
+      }
+    ],
+    "status": "processing",
+    "remark": "球墨铸铁QT450",
+    "createdAt": "2026-06-25T15:00:00Z",
+    "updatedAt": "2026-06-28T09:45:00Z"
+  },
+  {
+    "id": "o020",
+    "orderNo": "WX202606020",
+    "partName": "活塞",
+    "partNo": "HS-028-E",
+    "quantity": 200,
+    "unitPrice": 145.0,
+    "totalPrice": 29000,
+    "deliveryDate": "2026-07-15",
+    "supplierId": "s003",
+    "supplierName": "精工机械加工中心",
+    "drawings": [
+      {
+        "id": "dr020",
+        "name": "活塞零件图.pdf",
+        "type": "application/pdf",
+        "size": 1876543,
+        "url": "/drawings/piston.pdf",
+        "uploadedAt": "2026-06-28T11:20:00Z"
+      }
+    ],
+    "status": "inspecting",
+    "remark": "铝合金压铸",
+    "createdAt": "2026-06-28T11:00:00Z",
+    "updatedAt": "2026-07-14T16:30:00Z"
+  }
+]
